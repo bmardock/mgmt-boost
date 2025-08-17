@@ -75,7 +75,7 @@ All lightweight, private, and Slack-first.
 
 We’re starting with a **private alpha**. Want in?  
 
-👉 [**Join the Waitlist**](https://your-form-link.com) 👈  
+👉 [**Join the Waitlist**](https://bmardock.github.io/mgmt-boost/) 👈  
 
 ---
 
