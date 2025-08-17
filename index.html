@@ -49,23 +49,23 @@
 
       <!-- Email capture -->
       <form id="waitlistForm"
-            action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID"
-            method="POST"
-            class="mt-8 flex flex-col md:flex-row items-center justify-center gap-3"
-            aria-label="Join the mgmt-boost private alpha">
-        <input type="email" name="email" required
-               placeholder="you@company.com" aria-label="Email address"
-               class="w-full md:w-96 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400" />
-        <!-- simple honeypot -->
-        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-        <!-- optional redirect if you prefer a new page -->
-        <!-- <input type="hidden" name="_redirect" value="https://<your-username>.github.io/mgmt-boost/thanks.html"> -->
-        <button type="submit"
-                class="px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-zinc-400">
-          Join the private alpha
-        </button>
-      </form>
-      <p id="formMsg" class="hidden mt-3 text-sm"></p>
+      action="https://formspree.io/f/xrblvldz"
+      method="POST"
+      class="mt-8 flex flex-col md:flex-row items-center justify-center gap-3"
+      aria-label="Join the mgmt-boost private alpha">
+  <input type="email" name="email" required
+         placeholder="you@company.com" aria-label="Email address"
+         class="w-full md:w-96 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400" />
+  <!-- honeypot -->
+  <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+  <!-- optional: add a custom subject on the notification email -->
+  <input type="hidden" name="_subject" value="New mgmt-boost signup!" />
+  <button type="submit"
+          class="px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-zinc-400">
+    Join the private alpha
+  </button>
+</form>
+<p id="formMsg" class="hidden mt-3 text-sm"></p>
       <p class="mt-3 text-xs text-zinc-500">
         Private by default. Notes live in your Google Drive. No raw Slack/Zoom content stored.
       </p>
@@ -213,12 +213,13 @@
   </footer>
 
   <!-- Inline success handling for Formspree -->
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-    const form = document.getElementById('waitlistForm');
-    const msg = document.getElementById('formMsg');
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
+ <script>
+  const form = document.getElementById('waitlistForm');
+  const msg = document.getElementById('formMsg');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
       const res = await fetch(form.action, {
         method: 'POST',
         body: new FormData(form),
@@ -232,7 +233,11 @@
         msg.textContent = "Hmm, something went wrong. Try again or email hi@mgmtboost.com.";
         msg.className = "mt-3 text-sm text-rose-400";
       }
-    });
-  </script>
+    } catch {
+      msg.textContent = "Network error. Please try again.";
+      msg.className = "mt-3 text-sm text-rose-400";
+    }
+  });
+</script>
 </body>
 </html>
