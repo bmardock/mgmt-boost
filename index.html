@@ -4,69 +4,235 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>mgmt-boost — Your leadership superpower</title>
-  <meta name="description" content="mgmt-boost is a Slack-first management augmentation toolkit: boost messages, track team pulse, and get smart nudges—without another tool." />
+  <meta name="description" content="mgmt-boost is a Slack-first management augmentation toolkit: boost messages, keep quick 1:1 & meeting notes to Google Drive, track team pulse, and get helpful nudges—without another tool." />
   <meta property="og:title" content="mgmt-boost — Your leadership superpower" />
-  <meta property="og:description" content="Slack-first manager augmentation: boosters, diary, team pulse, nudges." />
-  <meta property="og:image" content="https://your-domain.com/assets/og.png" />
+  <meta property="og:description" content="Slack-first manager augmentation: boosters, diary to Drive, team pulse, nudges." />
+  <meta property="og:image" content="https://<your-username>.github.io/mgmt-boost/assets/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:," />
   <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Optional privacy-friendly analytics (replace domain if you enable) -->
+  <!-- <script defer data-domain="<your-username>.github.io" src="https://plausible.io/js/script.js"></script> -->
+  <style>
+    /* small niceties */
+    :root { color-scheme: dark; }
+  </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100">
+  <!-- Header -->
   <header class="max-w-5xl mx-auto px-4 py-10">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="h-9 w-9 rounded-xl bg-zinc-800 grid place-items-center font-bold">MB</div>
         <span class="font-semibold tracking-tight">mgmt-boost</span>
       </div>
-      <a href="https://github.com/yourname/mgmt-boost" class="text-sm underline decoration-zinc-500 hover:decoration-zinc-200">GitHub</a>
+      <a href="https://github.com/<your-username>/mgmt-boost" target="_blank" rel="noopener noreferrer"
+         class="text-sm underline decoration-zinc-500 hover:decoration-zinc-200">
+        GitHub
+      </a>
     </div>
   </header>
 
+  <!-- Main -->
   <main class="max-w-5xl mx-auto px-4 pb-24">
+    <!-- HERO -->
     <section class="text-center">
-      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-        Your leadership <span class="text-zinc-400">superpower</span><br/> right inside Slack
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight [text-wrap:balance]">
+        Your leadership <span class="text-zinc-400">superpower</span><br class="hidden sm:block" />
+        right inside Slack
       </h1>
       <p class="mt-5 text-zinc-300 max-w-2xl mx-auto">
-        Boost clarity and empathy before you hit send. Capture quick 1:1 & meeting notes to Google Drive.
-        Track team pulse and get nudges to celebrate wins, unblock progress, and keep cadence—without another tool.
+        Boost clarity before you hit send. Capture quick 1:1 & meeting notes to Google Drive.
+        Track team pulse and get quiet, helpful nudges to celebrate wins, unblock progress, and keep cadence—without another tool.
       </p>
 
       <!-- Email capture -->
-      <form
-        action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID"
-        method="POST"
-        class="mt-8 flex flex-col md:flex-row items-center justify-center gap-3"
-        id="waitlistForm"
-      >
+      <form id="waitlistForm"
+            action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID"
+            method="POST"
+            class="mt-8 flex flex-col md:flex-row items-center justify-center gap-3"
+            aria-label="Join the mgmt-boost private alpha">
         <input type="email" name="email" required
-               placeholder="you@company.com"
-               class="w-full md:w-96 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400"
-               aria-label="Email address">
+               placeholder="you@company.com" aria-label="Email address"
+               class="w-full md:w-96 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400" />
         <!-- simple honeypot -->
-        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off">
+        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+        <!-- optional redirect if you prefer a new page -->
+        <!-- <input type="hidden" name="_redirect" value="https://<your-username>.github.io/mgmt-boost/thanks.html"> -->
         <button type="submit"
-                class="px-5 py-3 rounded-xl bg-white/90 text-zinc-900 font-semibold hover:bg-white transition">
+                class="px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-zinc-400">
           Join the private alpha
         </button>
-        <!-- optional redirect after submit -->
-        <input type="hidden" name="_redirect" value="https://YOUR_GITHUB_USER.github.io/mgmt-boost/thanks.html">
       </form>
-
+      <p id="formMsg" class="hidden mt-3 text-sm"></p>
       <p class="mt-3 text-xs text-zinc-500">
-        By joining, you’ll get early updates. No spam. Unsubscribe anytime.
+        Private by default. Notes live in your Google Drive. No raw Slack/Zoom content stored.
       </p>
 
-      <!-- Hero mock -->
-      <div class="mt-12 bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
-        <img src="./assets/hero.png" alt="mgmt-boost Slack booster + digest mock"
-             class="w-full rounded-xl">
+      <!-- Live UI mock: Slack Booster modal -->
+      <div class="mt-12 bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6">
+        <div class="mx-auto max-w-2xl rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+            <div class="flex items-center gap-2">
+              <div class="h-6 w-6 rounded bg-zinc-800 grid place-items-center text-xs font-bold">MB</div>
+              <span class="text-sm text-zinc-300">mgmt-boost — Message Booster</span>
+            </div>
+            <span class="text-zinc-500 text-sm">Preview</span>
+          </div>
+          <div class="p-4 space-y-4">
+            <label class="block text-xs uppercase tracking-wide text-zinc-400">Your draft</label>
+            <textarea class="w-full h-28 rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100"
+              placeholder="This is wrong. Fix it now."></textarea>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="rounded-lg border border-zinc-800 p-3">
+                <div class="text-xs text-zinc-400 mb-1">Clarity score</div>
+                <div class="text-2xl font-bold">72</div>
+              </div>
+              <div class="rounded-lg border border-zinc-800 p-3">
+                <div class="text-xs text-zinc-400 mb-1">Boosted score</div>
+                <div class="text-2xl font-bold text-emerald-400">93</div>
+              </div>
+            </div>
+
+            <label class="block text-xs uppercase tracking-wide text-zinc-400">Boosted version</label>
+            <div class="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-3 text-zinc-100">
+              I noticed an issue in the report. Can you adjust it before EOD? Thanks!
+            </div>
+
+            <div class="flex items-center justify-end gap-2">
+              <button class="px-3 py-2 rounded-lg border border-zinc-800 text-zinc-300 hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-400">Keep original</button>
+              <button class="px-4 py-2 rounded-lg bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">Send boosted</button>
+            </div>
+          </div>
+        </div>
       </div>
+      <p class="mt-3 text-xs text-zinc-500">Live preview: Slack booster and weekly digest UI below.</p>
     </section>
 
+    <!-- Features -->
     <section class="mt-16 grid md:grid-cols-3 gap-6">
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
         <h3 class="font-semibold text-lg">Message Booster</h3>
-        <p class="mt-2 text-zinc-300">Rephrase for clarity & tone before sending. One click. Private
+        <p class="mt-2 text-zinc-300">Rephrase for clarity & tone before sending. One click. Private.</p>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+        <h3 class="font-semibold text-lg">Diary & 1:1 notes → Drive</h3>
+        <p class="mt-2 text-zinc-300">Slack prompts create structured Google Docs using a clean taxonomy.</p>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+        <h3 class="font-semibold text-lg">Team pulse & nudges</h3>
+        <p class="mt-2 text-zinc-300">Lightweight signals (silence, morale, cadence) drive positive actions.</p>
+      </div>
+    </section>
+
+    <!-- Live UI mock: Weekly Digest -->
+    <section class="mt-10">
+      <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold">Weekly Compass Digest</h3>
+          <span class="text-xs text-zinc-500">Week of Aug 11–15</span>
+        </div>
+        <div class="mt-4 grid md:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-zinc-800 p-4">
+            <div class="text-xs text-zinc-400 mb-1">Team pulse</div>
+            <p class="text-zinc-200">Energy steady; collaboration dipped after retro conflict.</p>
+          </div>
+          <div class="rounded-xl border border-zinc-800 p-4">
+            <div class="text-xs text-zinc-400 mb-1">Recognition</div>
+            <p class="text-zinc-200">Two milestone commits went unrecognized. Draft shoutout?</p>
+          </div>
+          <div class="rounded-xl border border-zinc-800 p-4">
+            <div class="text-xs text-zinc-400 mb-1">1:1 themes</div>
+            <p class="text-zinc-200">Sarah progressing; still low team connection (3 weeks).</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl border border-zinc-800 p-4">
+          <div class="text-xs text-zinc-400 mb-1">Suggested focus next week</div>
+          <ul class="list-disc list-inside text-zinc-200 space-y-1">
+            <li>Celebrate the release in Monday standup.</li>
+            <li>Buddy Sarah for sprint 2 pairing.</li>
+            <li>Rotate facilitation and pre-share retro agenda.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="mt-16">
+      <h3 class="text-center font-semibold text-lg">How it works</h3>
+      <div class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div class="text-zinc-400 text-sm">1. Install</div>
+          <p class="mt-2 text-zinc-200">Add the Slack app; connect Google Drive to create a private “Manager Diary” folder.</p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div class="text-zinc-400 text-sm">2. Use in flow</div>
+          <p class="mt-2 text-zinc-200">Use <code>/boost</code> and <code>/diary</code>. Notes save to your Drive; we index metadata only.</p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div class="text-zinc-400 text-sm">3. Get digest</div>
+          <p class="mt-2 text-zinc-200">A short weekly email summarizes signals and suggests next best actions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-16">
+      <h3 class="text-center font-semibold text-lg">FAQ</h3>
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div class="font-semibold">Is this private?</div>
+          <p class="mt-2 text-zinc-300">Yes. Notes live in your Google Drive. We don’t store raw Slack/Zoom/Jira content—only derived signals (e.g., participation %, sentiment score).</p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div class="font-semibold">Do I need another tool?</div>
+          <p class="mt-2 text-zinc-300">No. It’s Slack-first with a weekly email. Optional dashboard can come later.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="mt-16 text-center">
+      <h4 class="text-xl font-semibold">Want early access?</h4>
+      <p class="mt-2 text-zinc-300">Join the private alpha and help shape mgmt-boost.</p>
+      <button onclick="document.querySelector('#waitlistForm input[type=email]').focus()"
+              class="mt-4 px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">
+        Join the private alpha
+      </button>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900">
+    <div class="max-w-5xl mx-auto px-4 py-8 text-xs text-zinc-500 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
+      <span>© <span id="y"></span> mgmt-boost</span>
+      <span>Questions? <a href="mailto:hi@mgmtboost.com" class="underline decoration-zinc-600 hover:decoration-zinc-200">hi@mgmtboost.com</a></span>
+    </div>
+  </footer>
+
+  <!-- Inline success handling for Formspree -->
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const form = document.getElementById('waitlistForm');
+    const msg = document.getElementById('formMsg');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.reset();
+        msg.textContent = "You're on the list 🎉 We'll email you when the private alpha opens.";
+        msg.className = "mt-3 text-sm text-emerald-400";
+      } else {
+        msg.textContent = "Hmm, something went wrong. Try again or email hi@mgmtboost.com.";
+        msg.className = "mt-3 text-sm text-rose-400";
+      }
+    });
+  </script>
+</body>
+</html>
