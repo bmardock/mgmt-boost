@@ -1,99 +1,68 @@
-# mgmt-boost 🚀  WIP 
-*A Slack-first management augmentation toolkit.*  
+# mgmt-boost
+A Slack-first management augmentation toolkit.
 
-![mgmt-boost Mockup](./assets/slack-boost-modal.png)  
-*(Example: Boost a Slack message before sending)*  
-
----
-
-## ⚡ What is mgmt-boost?  
-**mgmt-boost** gives managers superpowers — directly in the tools they already use.  
-
-It’s designed to help leaders:  
-- Boost clarity and empathy in messages.  
-- Capture quick notes from 1:1s, standups, and retros.  
-- Track team morale, productivity, and engagement signals.  
-- Get nudges to celebrate wins, unblock progress, and adjust cadence.  
-
-All lightweight, private, and Slack-first.  
+**Join the waitlist:** https://bmardock.github.io/mgmt-boost/
 
 ---
 
-## 🔑 Core Superpowers  
+## What is mgmt-boost?
+mgmt-boost gives managers superpowers—directly in Slack—without adding another tool.
 
-- **Message Booster** → Rewrites Slack messages for clarity & tone.  
-- **Diary & Notes** → Quick prompts for daily focus, meeting reflections, and 1:1 summaries.  
-- **Team Pulse Tracker** → Flags silence, low participation, or morale dips.  
-- **Recognition Nudges** → Prompts to celebrate milestones and small wins.  
-- **Cadence Coach** → Tracks 1:1 and check-in rhythm.  
-- **Meeting Reflections** → Turns rough notes into structured insights.  
+- Boost clarity and empathy before you hit send  
+- Capture quick 1:1 & meeting notes (saved to your Google Drive)  
+- Track team pulse (silence, morale, cadence)  
+- Get nudges to celebrate wins, unblock progress, and keep rhythm  
 
----
-
-## 🖼️ Screenshots  
-
-**Message Booster Modal**  
-![Message Booster](./assets/message-booster.png)  
-
-**1:1 Summary Card**  
-![1:1 Summary](./assets/1-1-summary.png)  
-
-**Weekly Digest Email**  
-![Weekly Digest](./assets/digest-email.png)  
+Private by default. Notes live in your Google Drive. No raw Slack/Zoom/Jira content stored.
 
 ---
 
-## 📅 Roadmap  
-
-- **MVP (Private Alpha)**  
-  - Slack app with `/boost` + `/diary` commands  
-  - Google Drive sync for notes & 1:1s  
-  - Weekly digest email  
-
-- **Phase 2**  
-  - Zoom transcript insights  
-  - Jira/GitHub signals (productivity + recognition)  
-  - Recognition streaks + morale radar  
-
-- **Phase 3**  
-  - Full Manager Compass dashboard  
-  - Delegation detector + onboarding companion  
-  - Enterprise-ready deployment  
+## Core Superpowers
+- **Message Booster** – Rephrase drafts for clarity & tone (pre-send)  
+- **Diary & 1:1 Notes → Drive** – Structured docs via clean taxonomy  
+- **Team Pulse Tracker** – Lightweight signals (silence, participation, sentiment)  
+- **Recognition Nudges** – Celebrate milestones and small wins  
+- **Cadence Coach** – 1:1 rhythm tracking and reminders  
+- **Meeting Reflections** – Turns rough notes into actionable insights  
 
 ---
 
-## 🔒 Security First  
-
-- Notes stored in **your Google Drive** (you own the data).  
-- No raw Slack/Zoom/Jira content persisted — only derived signals.  
-- Processing is ephemeral; insights only.  
-- Private by default — only you see your nudges & digest.  
+## How it Works
+1. **Install** – Add the Slack app; connect Google Drive to create a private *Manager Diary* folder  
+2. **Use in flow** – `/boost` and `/diary` right in Slack; we index file metadata only  
+3. **Digest** – A short weekly email summarizes signals and suggests next best actions  
 
 ---
 
-## 📬 Get Early Access  
-
-We’re starting with a **private alpha**. Want in?  
-
-👉 [**Join the Waitlist**](https://bmardock.github.io/mgmt-boost/) 👈  
-
----
-
-## 🛠️ Stack  
-
-- Slack API (commands, modals)  
-- Google Docs/Drive API (diary + notes)  
-- Node.js + FastAPI (backend services)  
-- Postgres (metadata index only — no raw content stored)  
-- LLMs for tone rephrasing + sentiment signals  
+## Security First
+- Notes stored in your Google Drive (you own the data)  
+- No raw content persisted from Slack/Zoom/Jira—only derived, anonymized signals  
+- Processing is ephemeral; insights only  
+- Private by default—no HR/exec visibility in MVP  
 
 ---
 
-## 👋 About  
-
-**mgmt-boost** is an experiment in augmenting managers — not replacing them.  
-It’s built to be **lightweight, adoptable, and positive**, so managers can focus on leading instead of firefighting.  
-
-Created by [Brandon Mardock](https://linkedin.com/in/brandonmardock).  
+## Roadmap
+- **MVP (Private Alpha):** Slack `/boost` + `/diary`, Drive sync, weekly digest  
+- **Next:** Zoom transcripts, Jira/GitHub signals, recognition streaks, morale radar  
+- **Later:** Manager Compass dashboard, delegation detector, onboarding companion, enterprise deploy  
 
 ---
+
+## Project Status
+Early prototype / exploring design partners.  
+If you’re a manager or team lead, join the waitlist on the landing page.
+
+---
+
+## Dev Notes (repo)
+This repo hosts the public landing page (GitHub Pages).  
+Core app code (Slack bot, backend) will live in a separate repo when ready.
+
+- GitHub Pages URL: `https://<username>.github.io/<repo>/`  
+- This site uses Tailwind via CDN (no build step)  
+
+---
+
+## License
+TBD (likely MIT for the landing page; app licensing to be decided).
