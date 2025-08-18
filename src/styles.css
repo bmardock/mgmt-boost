@@ -1,0 +1,480 @@
+/* Mgmt Boost Extension Styles */
+
+/* ===== BOOST BUTTON ===== */
+.mb-boost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 4px;
+  transition: all 0.2s ease;
+}
+
+.mb-boost-btn:hover {
+  background: #e9ecef;
+  border-color: #ccc;
+}
+
+.mb-boost-btn--active {
+  border: 1px solid #007a5a;
+  background: #007a5a;
+  color: #fff;
+}
+
+.mb-boost-btn--active:hover {
+  background: #148567;
+  border-color: #148567;
+}
+
+/* ===== PANEL BUTTON ===== */
+.mb-panel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  margin-left: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mb-panel-btn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+/* ===== SIDE PANEL CONTENT ===== */
+.mb-sidepanel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fff;
+  color: #333;
+}
+
+/* ===== TABS ===== */
+.mb-tabs {
+  display: flex;
+  padding: 8px 8px 0 8px;
+  gap: 6px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.mb-tab {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.mb-tab:hover {
+  background: #e9ecef;
+  color: #333;
+}
+
+.mb-tab.active {
+  background: #fff;
+  color: #333;
+  border-color: #e1e5e9;
+  font-weight: 500;
+}
+
+/* ===== PANEL BODY ===== */
+.mb-panel-body {
+  padding: 16px;
+  overflow: auto;
+  flex: 1;
+  background: #fff;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.mb-field {
+  margin-bottom: 16px;
+}
+
+.mb-field label {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.mb-field input,
+.mb-field textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #333;
+  padding: 8px 12px;
+  font-size: 12px;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mb-field input:focus,
+.mb-field textarea:focus {
+  outline: none;
+  border-color: #007a5a;
+  box-shadow: 0 0 0 3px rgba(0, 122, 90, 0.1);
+}
+
+.mb-save {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #007a5a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  font-size: 12px;
+}
+
+.mb-save:hover {
+  background: #148567;
+}
+
+.mb-muted {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+/* ===== DIARY ===== */
+.mb-entries {
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.mb-entry {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f8f9fa;
+  margin-bottom: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+/* ===== CALENDAR ===== */
+.mb-calendar-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.mb-calendar-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mb-calendar-grid {
+  margin-bottom: 20px;
+}
+
+.mb-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 4px;
+}
+
+.mb-calendar-weekdays > div {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  padding: 4px 0;
+}
+
+.mb-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.mb-calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e1e5e9;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  font-size: 11px;
+  transition: background-color 0.2s ease;
+}
+
+.mb-calendar-day:hover {
+  background: #f8f9fa;
+}
+
+.mb-calendar-day.empty {
+  background: #f8f9fa;
+  cursor: default;
+}
+
+.mb-calendar-day.today {
+  background: #007a5a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.mb-calendar-day.has-events {
+  background: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.mb-calendar-day.has-events .mb-event-dot {
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background: #007a5a;
+  border-radius: 50%;
+}
+
+.mb-calendar-events h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mb-events-list {
+  margin-top: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mb-event {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f8f9fa;
+  margin-bottom: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+/* ===== UTILITIES ===== */
+.mb-flash-message {
+  position: absolute;
+  transform: translateY(-120%);
+  right: 8px;
+  background: #eaeaea;
+  color: #111;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  z-index: 10001;
+}
+
+.mb-toast {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: #eaeaea;
+  color: #111;
+  padding: 8px 12px;
+  border-radius: 6px;
+  z-index: 10001;
+  font-size: 12px;
+}
+
+/* ===== BOOST RESULTS TOAST ===== */
+.mb-boost-results {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 10001;
+  animation: slideIn 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.mb-boost-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e5e9;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.mb-boost-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mb-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.mb-close-btn:hover {
+  background: #e9ecef;
+  color: #333;
+}
+
+.mb-tone-score {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.mb-score-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  color: white;
+  background: conic-gradient(
+    from 0deg,
+    #007a5a calc(var(--score) * 3.6deg),
+    #e9ecef calc(var(--score) * 3.6deg)
+  );
+  position: relative;
+}
+
+.mb-score-circle::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: white;
+  border-radius: 50%;
+}
+
+.mb-score-circle span {
+  position: relative;
+  z-index: 1;
+  color: #333;
+}
+
+.mb-score-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mb-score-label strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.mb-score-label span {
+  font-size: 12px;
+  color: #666;
+}
+
+.mb-improvements {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.mb-improvements h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mb-improvements ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 13px;
+  color: #555;
+}
+
+.mb-improvements li {
+  margin-bottom: 4px;
+}
+
+.mb-insights {
+  padding: 16px 20px;
+}
+
+.mb-insights h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mb-insight {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.mb-insight--warning {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+}
+
+.mb-insight--info {
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}
+
+.mb-insight--success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+}
+
+.mb-insight strong {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.mb-insight span {
+  opacity: 0.8;
+}

@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Mgmt Boost (POC)",
+  "version": "0.1.1",
+  "description": "Slack web POC: Boost button + side panel (Settings/Diary).",
+  "permissions": ["storage", "activeTab", "scripting", "sidePanel", "tabs"],
+  "host_permissions": ["https://app.slack.com/*"],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.slack.com/*"],
+      "js": ["src/mock-service.js", "src/content-bundled.js"],
+      "css": ["src/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Mgmt Boost"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
