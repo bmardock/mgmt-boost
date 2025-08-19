@@ -11,7 +11,7 @@
   "content_scripts": [
     {
       "matches": ["https://app.slack.com/*"],
-      "js": ["src/mock-service.js", "src/content-bundled.js"],
+      "js": ["src/mock-service.js", "src/ai-agent-service.js", "src/content-bundled.js"],
       "css": ["src/styles.css"],
       "run_at": "document_idle"
     }

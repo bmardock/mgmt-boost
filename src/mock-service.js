@@ -158,6 +158,15 @@ class MockMgmtBoostService {
       });
     }
 
+    // Add tense conversation detection
+    if (scores.directive > 3 || scores.negative > 2) {
+      insights.push({
+        type: "warning",
+        message: "Conversation may be getting tense",
+        suggestion: "Consider adding acknowledgment or positive reinforcement",
+      });
+    }
+
     return insights;
   }
 
