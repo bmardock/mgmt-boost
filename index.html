@@ -1,1098 +1,1712 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>mgmt-boost — Your leadership superpower</title>
-  <meta name="description" content="mgmt-boost is a Slack-first management augmentation toolkit: boost messages, keep quick 1:1 & meeting notes to Google Drive, track team pulse, and get helpful nudges—without another tool." />
-  <meta property="og:title" content="mgmt-boost — Your leadership superpower" />
-  <meta property="og:description" content="Slack-first manager augmentation: boosters, diary to Drive, team pulse, nudges." />
-  <meta property="og:image" content="https://bmardock.github.io/mgmt-boost/assets/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="data:," />
-  <!-- Tailwind via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* small niceties */
-    :root { color-scheme: dark; }
-    
-    /* Animations */
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>mgmt-boost — Your leadership superpower</title>
+    <meta
+      name="description"
+      content="mgmt-boost is a Slack-first management augmentation toolkit: boost messages, keep quick 1:1 & meeting notes to Google Drive, track team pulse, and get helpful nudges—without another tool."
+    />
+    <meta
+      property="og:title"
+      content="mgmt-boost — Your leadership superpower"
+    />
+    <meta
+      property="og:description"
+      content="Slack-first manager augmentation: boosters, diary to Drive, team pulse, nudges."
+    />
+    <meta
+      property="og:image"
+      content="https://bmardock.github.io/mgmt-boost/assets/og.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="data:," />
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* small niceties */
+      :root {
+        color-scheme: dark;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes typewriter {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    
-    .animate-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.7;
-      }
-    }
-    
-    /* Slack-like styling */
-    .slack-input {
-      transition: all 0.2s ease;
-    }
-    
-    .slack-input:focus {
-      border-color: #007a5a;
-      box-shadow: 0 0 0 1px #007a5a;
-    }
-  </style>
-</head>
-<body class="bg-zinc-950 text-zinc-100">
-  <!-- Header -->
-  <header class="max-w-5xl mx-auto px-4 py-10">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-xl bg-zinc-800 grid place-items-center font-bold">MB</div>
-        <span class="font-semibold tracking-tight">mgmt-boost</span>
-      </div>
-      <a href="https://github.com/bmardock/mgmt-boost" target="_blank" rel="noopener noreferrer"
-         class="text-sm underline decoration-zinc-500 hover:decoration-zinc-200">
-        GitHub
-      </a>
-    </div>
-  </header>
 
-  <!-- Main -->
-  <main class="max-w-5xl mx-auto px-4 pb-24">
-    <!-- HERO -->
-    <section class="text-center">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight [text-wrap:balance]">
-        Your leadership <span class="text-zinc-400">superpower</span><br class="hidden sm:block" />
-        right inside Slack
-      </h1>
-      <p class="mt-5 text-zinc-300 max-w-2xl mx-auto">
-        Boost clarity before you send. Capture notes and meeting prep in Drive. Stay proactive with nudges that celebrate wins, unblock progress, and keep cadence.
-      </p>
+      /* Animations */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-      <!-- Email capture -->
-      <form id="waitlistForm"
-      action="https://formspree.io/f/xrblvldz"
-      method="POST"
-      class="mt-8 flex flex-col md:flex-row items-center justify-center gap-3"
-      aria-label="Join the mgmt-boost private alpha">
-  <input type="email" name="email" required
-         placeholder="you@company.com" aria-label="Email address"
-         class="w-full md:w-96 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400" />
-  <!-- honeypot -->
-  <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-  <!-- optional: add a custom subject on the notification email -->
-  <input type="hidden" name="_subject" value="New mgmt-boost signup!" />
-  <button type="submit"
-          class="px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-zinc-400">
-    Join the private alpha
-  </button>
-</form>
-<p id="formMsg" class="hidden mt-3 text-sm"></p>
-      <p class="mt-3 text-xs text-zinc-500">
-        Private by default. Notes live in your Google Drive. No raw Slack/Zoom content stored.
-      </p>
+      @keyframes typewriter {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
 
-      <!-- Live UI mock: Slack Booster modal -->
-      <div id="demoBooster" class="mt-12 bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 md:p-6">
-        <div class="mx-auto max-w-2xl rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl">
-          <!-- Slack-style header -->
-          <div class="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-            <div class="flex items-center gap-2">
-              <div class="h-6 w-6 rounded bg-zinc-800 grid place-items-center text-xs font-bold">MB</div>
-              <span class="text-sm text-zinc-300">mgmt-boost — Message Booster</span>
-            </div>
+      .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Slack-like styling */
+      .slack-input {
+        transition: all 0.2s ease;
+      }
+
+      .slack-input:focus {
+        border-color: #007a5a;
+        box-shadow: 0 0 0 1px #007a5a;
+      }
+
+      /* Animated gradient for superpower text */
+      .superpower-gradient {
+        background: linear-gradient(
+          45deg,
+          #ff6b6b,
+          #4ecdc4,
+          #45b7d1,
+          #96ceb4,
+          #feca57,
+          #ff9ff3,
+          #54a0ff,
+          #5f27cd
+        );
+        background-size: 400% 400%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShift 6s ease-in-out infinite;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-100">
+    <!-- Header -->
+    <header class="max-w-5xl mx-auto px-4 py-10">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="h-9 w-9 rounded-xl bg-zinc-800 grid place-items-center font-bold"
+          >
+            MB
           </div>
-          
-          <!-- Slack message input area -->
-          <div class="p-3 md:p-4 space-y-4">
-            <!-- Slack-style message input -->
-            <div class="relative">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold">👤</div>
-                <span class="text-sm text-zinc-400">You</span>
-              </div>
-              
-              <!-- Slack textarea with formatting toolbar -->
-              <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-                <!-- Top formatting toolbar -->
-                <div class="flex items-center gap-1 px-3 py-2 border-b border-zinc-800">
-                  <button class="text-zinc-400 hover:text-zinc-200 text-sm font-bold">B</button>
-                  <button class="text-zinc-400 hover:text-zinc-200 text-sm italic">I</button>
-                  <button class="text-zinc-400 hover:text-zinc-200 text-sm line-through">S</button>
-                  <div class="w-px h-4 bg-zinc-700 mx-1"></div>
-                  <button class="text-zinc-400 hover:text-zinc-200">•</button>
-                  <button class="text-zinc-400 hover:text-zinc-200">1.</button>
-
-                </div>
-                
-                <!-- Main textarea -->
-                <textarea id="demoTextarea" class="w-full h-20 md:h-16 bg-transparent border border-transparent px-3 py-2 text-zinc-100 resize-none focus:outline-none text-sm md:text-base"
-                  placeholder="Message Brandon"></textarea>
-                
-                <!-- Bottom toolbar with action buttons -->
-                <div class="flex items-center justify-between px-3 py-2 border-t border-zinc-800">
-                  <div class="flex items-center gap-1">
-                    <button class="text-zinc-400 hover:text-zinc-200">+</button>
-                    <button class="text-zinc-400 hover:text-zinc-200 underline">Aa</button>
-                    <button class="text-zinc-400 hover:text-zinc-200">@</button>
-                    <div class="w-px h-4 bg-zinc-700 mx-1"></div>
-                  </div>
-                  
-                  <!-- Action buttons -->
-                  <div class="flex items-center gap-1">
-                    <button id="demoBoostBtn" class="px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors">Boost</button>
-                    <button class="px-2 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors transform">▶</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
-            <!-- Notification bar - always present to prevent layout shifts -->
-            <div id="demoNotification" class="bg-zinc-800 border border-zinc-700 rounded-lg p-2 h-8 flex items-center justify-between opacity-0 pointer-events-none transition-opacity duration-300">
-              <span id="notificationText" class="text-xs text-zinc-300 leading-tight"></span>
-              <div class="flex items-center gap-3">
-                <button onclick="undoBoost()" class="text-emerald-400 hover:text-emerald-300 text-xs underline">Undo</button>
-                <button onclick="hideNotification()" class="text-zinc-400 hover:text-zinc-200 text-xs">×</button>
-              </div>
-            </div>
-
-            <!-- Scenario controls -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-zinc-800 gap-3">
-              <div class="flex items-center gap-2">
-                <div class="text-xs text-zinc-500">Demo scenarios:</div>
-                <div id="currentTopic" class="text-sm text-emerald-400 font-medium">Click a scenario to start</div>
-              </div>
-              <div class="flex flex-nowrap gap-1 overflow-x-auto">
-    <button onclick="runScenario(1)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">1</button>
-    <button onclick="runScenario(2)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">2</button>
-    <button onclick="runScenario(3)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">3</button>
-    <button onclick="runScenario(4)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">4</button>
-    <button onclick="runScenario(5)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">5</button>
-    <button onclick="runScenario(6)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">6</button>
-    <button onclick="runScenario(7)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">7</button>
-    <button onclick="runScenario(8)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">8</button>
-    <button onclick="runScenario(9)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">9</button>
-    <button onclick="runScenario(10)" class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent">10</button>
-  </div>
-            </div>
-          </div>
+          <span class="font-semibold tracking-tight">mgmt-boost</span>
         </div>
+        <a
+          href="https://github.com/bmardock/mgmt-boost"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm underline decoration-zinc-500 hover:decoration-zinc-200"
+        >
+          GitHub
+        </a>
       </div>
-    </section>
-    <!-- Features -->
-    <section class="mt-16 grid md:grid-cols-3 gap-6">
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-        <h3 class="font-semibold text-lg">Message Booster</h3>
-        <p class="mt-2 text-zinc-300">Rephrase for clarity and tone before you send. One click, private, right in Slack.</p>
-      </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-        <h3 class="font-semibold text-lg">Manager Journal</h3>
-        <p class="mt-2 text-zinc-300">Capture daily notes and meeting prep for 1:1s, retros, and stakeholder sessions. Everything auto-organized in Drive.</p>
-      </div>
-      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-        <h3 class="font-semibold text-lg">Team Signals & Nudges</h3>
-        <p class="mt-2 text-zinc-300">Stay proactive with timely prompts — check in when it’s quiet, celebrate after a release, and support teammates who need it.</p>
-      </div>
-    </section>
+    </header>
 
-    <!-- Live UI mock: Mgmt Boost Panel -->
-    <section class="mt-10">
-      <div class="relative overflow-hidden bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 md:p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="font-semibold px-4 md:px-20"></h3>
-          <button id="openPanelBtn" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-200 border border-blue-500 shadow-lg shadow-blue-500/20 hover:bg-zinc-700 transition-all text-sm">
-            Mgmt Boost
+    <!-- Main -->
+    <main class="max-w-5xl mx-auto px-4 pb-24">
+      <!-- HERO -->
+      <section class="text-center">
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight [text-wrap:balance]"
+        >
+          Your leadership <span class="superpower-gradient">superpower</span
+          ><br class="hidden sm:block" />
+          right inside Slack
+        </h1>
+        <p class="mt-5 text-zinc-300 max-w-2xl mx-auto">
+          Boost clarity before you send. Capture notes and meeting prep in
+          Drive. Stay proactive with nudges that celebrate wins, unblock
+          progress, and keep cadence.
+        </p>
+
+        <!-- Email capture -->
+        <form
+          id="waitlistForm"
+          action="https://formspree.io/f/xrblvldz"
+          method="POST"
+          class="mt-8 flex flex-row items-center justify-center gap-3 max-w-md mx-auto"
+          aria-label="Join the mgmt-boost private alpha"
+        >
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="you@company.com"
+            aria-label="Email address"
+            class="flex-1 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 text-sm"
+          />
+          <!-- honeypot -->
+          <input
+            type="text"
+            name="_gotcha"
+            class="hidden"
+            tabindex="-1"
+            autocomplete="off"
+          />
+          <!-- optional: add a custom subject on the notification email -->
+          <input type="hidden" name="_subject" value="New mgmt-boost signup!" />
+          <button
+            type="submit"
+            class="px-4 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-zinc-400 text-sm whitespace-nowrap"
+          >
+            Join alpha
           </button>
-        </div>
-        
-        <!-- Slack-like interface with panel -->
-        <div class="bg-zinc-800 rounded-xl">
-          <!-- Left sidebar -->
-          <div class="absolute left-0 top-0 w-16 h-full bg-zinc-900 border-r border-zinc-700 flex flex-col items-center pt-4 z-10">
-            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm font-bold mb-4">MB</div>
-            <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
-            <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
-            <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
-          </div>
-          
-          <!-- Main chat area -->
-          <div class="ml-16 h-full flex flex-col relative">
-            <!-- Header -->
-            <div class="flex items-center justify-between p-4 border-b border-zinc-700">
-              <div class="flex items-center gap-3">
-                <div>
-                  <div class="font-medium">#ENG-team</div>
-                </div>
-              </div>
+        </form>
+        <p id="formMsg" class="hidden mt-3 text-sm"></p>
+        <p class="mt-3 text-xs text-zinc-500">
+          Private by default. Notes live in your Google Drive. No raw Slack/Zoom
+          content stored.
+        </p>
+
+        <!-- Live UI mock: Slack Booster modal -->
+        <div
+          id="demoBooster"
+          class="mt-12 bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 md:p-6"
+        >
+          <div
+            class="mx-auto max-w-2xl rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
+          >
+            <!-- Slack-style header -->
+            <div
+              class="flex items-center justify-between px-4 py-3 border-b border-zinc-800"
+            >
               <div class="flex items-center gap-2">
-                <button class="p-2 rounded hover:bg-zinc-700">⋯</button>
+                <div
+                  class="h-6 w-6 rounded bg-zinc-800 grid place-items-center text-xs font-bold"
+                >
+                  MB
+                </div>
+                <span class="text-sm text-zinc-300"
+                  >mgmt-boost — Message Booster</span
+                >
               </div>
             </div>
-            
-            <!-- Chat messages -->
-            <div class="flex-1 p-4 space-y-4 overflow-y-auto">
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm">B</div>
-                <div class="flex-1">
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="font-medium">Brandon</span>
-                    <span class="text-xs text-zinc-400">1:58 PM</span>
+
+            <!-- Slack message input area -->
+            <div class="p-3 md:p-4 space-y-4">
+              <!-- Slack-style message input -->
+              <div class="relative">
+                <div class="flex items-center gap-2 mb-2">
+                  <div
+                    class="h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold"
+                  >
+                    👤
                   </div>
-                  <div class="bg-zinc-700 rounded-lg p-3">
-                    <div class="text-sm text-zinc-300">Awesome looks like someone broke DEV again!</div>
+                  <span class="text-sm text-zinc-400">You</span>
+                </div>
+
+                <!-- Slack textarea with formatting toolbar -->
+                <div
+                  class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden"
+                >
+                  <!-- Top formatting toolbar -->
+                  <div
+                    class="flex items-center gap-1 px-3 py-2 border-b border-zinc-800"
+                  >
+                    <button
+                      class="text-zinc-400 hover:text-zinc-200 text-sm font-bold"
+                    >
+                      B
+                    </button>
+                    <button
+                      class="text-zinc-400 hover:text-zinc-200 text-sm italic"
+                    >
+                      I
+                    </button>
+                    <button
+                      class="text-zinc-400 hover:text-zinc-200 text-sm line-through"
+                    >
+                      S
+                    </button>
+                    <div class="w-px h-4 bg-zinc-700 mx-1"></div>
+                    <button class="text-zinc-400 hover:text-zinc-200">•</button>
+                    <button class="text-zinc-400 hover:text-zinc-200">
+                      1.
+                    </button>
+                  </div>
+
+                  <!-- Main textarea -->
+                  <textarea
+                    id="demoTextarea"
+                    class="w-full h-20 md:h-16 bg-transparent border border-transparent px-3 py-2 text-zinc-100 resize-none focus:outline-none text-sm md:text-base"
+                    placeholder="Message Brandon"
+                  ></textarea>
+
+                  <!-- Bottom toolbar with action buttons -->
+                  <div
+                    class="flex items-center justify-between px-3 py-2 border-t border-zinc-800"
+                  >
+                    <div class="flex items-center gap-1">
+                      <button class="text-zinc-400 hover:text-zinc-200">
+                        +
+                      </button>
+                      <button
+                        class="text-zinc-400 hover:text-zinc-200 underline"
+                      >
+                        Aa
+                      </button>
+                      <button class="text-zinc-400 hover:text-zinc-200">
+                        @
+                      </button>
+                      <div class="w-px h-4 bg-zinc-700 mx-1"></div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex items-center gap-1">
+                      <button
+                        id="demoBoostBtn"
+                        class="px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                      >
+                        Boost
+                      </button>
+                      <button
+                        class="px-2 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors transform"
+                      >
+                        ▶
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm">S</div>
-                <div class="flex-1">
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="font-medium">Sara</span>
-                    <span class="text-xs text-zinc-400">1:59 PM</span>
-                  </div>
-                  <div class="bg-zinc-700 rounded-lg p-3">
-                    <div class="text-sm text-zinc-300">Was that from my last PR?</div>
-                  </div>
+
+              <!-- Notification bar - always present to prevent layout shifts -->
+              <div
+                id="demoNotification"
+                class="bg-zinc-800 border border-zinc-700 rounded-lg p-2 h-8 flex items-center justify-between opacity-0 pointer-events-none transition-opacity duration-300"
+              >
+                <span
+                  id="notificationText"
+                  class="text-xs text-zinc-300 leading-tight"
+                ></span>
+                <div class="flex items-center gap-3">
+                  <button
+                    onclick="undoBoost()"
+                    class="text-emerald-400 hover:text-emerald-300 text-xs underline"
+                  >
+                    Undo
+                  </button>
+                  <button
+                    onclick="hideNotification()"
+                    class="text-zinc-400 hover:text-zinc-200 text-xs"
+                  >
+                    ×
+                  </button>
                 </div>
               </div>
-            </div>
-            
-            <!-- Message input -->
-            <div class="p-4 border-t border-zinc-700">
-              <div class="bg-zinc-700 rounded-lg p-3">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <button class="text-zinc-400 hover:text-zinc-200">+</button>
-                    <button class="text-zinc-400 hover:text-zinc-200">@</button>
-                    <span class="text-zinc-500 text-sm">Message Brandon</span>
+
+              <!-- Scenario controls -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-zinc-800 gap-3"
+              >
+                <div class="flex items-center gap-2">
+                  <div class="text-xs text-zinc-500">Demo scenarios:</div>
+                  <div
+                    id="currentTopic"
+                    class="text-sm text-emerald-400 font-medium"
+                  >
+                    Click a scenario to start
                   </div>
-                  <div class="flex items-center gap-2">
-                    <button class="px-3 py-1 rounded text-xs bg-emerald-600 text-white">Boost</button>
-                    <button class="px-3 py-1 rounded text-xs bg-emerald-600 text-white">▶</button>
-                  </div>
+                </div>
+                <div class="flex flex-nowrap gap-1 overflow-x-auto">
+                  <button
+                    onclick="runScenario(1)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    1
+                  </button>
+                  <button
+                    onclick="runScenario(2)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    2
+                  </button>
+                  <button
+                    onclick="runScenario(3)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    3
+                  </button>
+                  <button
+                    onclick="runScenario(4)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    4
+                  </button>
+                  <button
+                    onclick="runScenario(5)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    5
+                  </button>
+                  <button
+                    onclick="runScenario(6)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    6
+                  </button>
+                  <button
+                    onclick="runScenario(7)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    7
+                  </button>
+                  <button
+                    onclick="runScenario(8)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    8
+                  </button>
+                  <button
+                    onclick="runScenario(9)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    9
+                  </button>
+                  <button
+                    onclick="runScenario(10)"
+                    class="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
+                  >
+                    10
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-          
-          <!-- Mgmt Boost Panel (initially hidden) -->
-          <div id="mgmtBoostPanel" class="absolute right-0 top-0 w-full sm:w-96 h-full bg-white text-zinc-900 transform translate-x-full transition-transform duration-500 ease-out shadow-2xl z-20">
-            <div class="h-full flex flex-col">
-              <!-- Panel header -->
-              <div class="flex items-center justify-between p-4 border-b border-zinc-200 bg-zinc-50">
+        </div>
+      </section>
+      <!-- Features -->
+      <section class="mt-16 grid md:grid-cols-3 gap-6">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <h3 class="font-semibold text-lg">Message Booster</h3>
+          <p class="mt-2 text-zinc-300">
+            Rephrase for clarity and tone before you send. One click, private,
+            right in Slack.
+          </p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <h3 class="font-semibold text-lg">Manager Journal</h3>
+          <p class="mt-2 text-zinc-300">
+            Capture daily notes and meeting prep for 1:1s, retros, and
+            stakeholder sessions. Everything auto-organized in Drive.
+          </p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <h3 class="font-semibold text-lg">Team Signals & Nudges</h3>
+          <p class="mt-2 text-zinc-300">
+            Stay proactive with timely prompts — check in when it’s quiet,
+            celebrate after a release, and support teammates who need it.
+          </p>
+        </div>
+      </section>
+
+      <!-- Live UI mock: Mgmt Boost Panel -->
+      <section class="mt-10">
+        <div
+          class="relative overflow-hidden bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 md:p-6"
+        >
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-semibold px-4 md:px-20"></h3>
+            <button
+              id="openPanelBtn"
+              class="px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-200 border border-blue-500 shadow-lg shadow-blue-500/20 hover:bg-zinc-700 transition-all text-sm"
+            >
+              Mgmt Boost
+            </button>
+          </div>
+
+          <!-- Slack-like interface with panel -->
+          <div class="bg-zinc-800 rounded-xl">
+            <!-- Left sidebar -->
+            <div
+              class="absolute left-0 top-0 w-16 h-full bg-zinc-900 border-r border-zinc-700 flex flex-col items-center pt-4 z-10"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm font-bold mb-4"
+              >
+                MB
+              </div>
+              <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
+              <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
+              <div class="w-6 h-6 rounded bg-zinc-700 mb-2"></div>
+            </div>
+
+            <!-- Main chat area -->
+            <div class="ml-16 h-full flex flex-col relative">
+              <!-- Header -->
+              <div
+                class="flex items-center justify-between p-4 border-b border-zinc-700"
+              >
                 <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 bg-zinc-800 rounded flex items-center justify-center">
-                    <span class="text-white font-bold text-sm">M</span>
+                  <div>
+                    <div class="font-medium">#ENG-team</div>
                   </div>
-                  <h3 class="font-semibold">Mgmt Boost</h3>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button id="settingsBtn" class="p-2 rounded hover:bg-zinc-200 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
+                  <button class="p-2 rounded hover:bg-zinc-700">⋯</button>
+                </div>
+              </div>
+
+              <!-- Chat messages -->
+              <div class="flex-1 p-4 space-y-4 overflow-y-auto">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm"
+                  >
+                    B
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-medium">Brandon</span>
+                      <span class="text-xs text-zinc-400">1:58 PM</span>
+                    </div>
+                    <div class="bg-zinc-700 rounded-lg p-3">
+                      <div class="text-sm text-zinc-300">
+                        Awesome looks like someone broke DEV again!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm"
+                  >
+                    S
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-medium">Sara</span>
+                      <span class="text-xs text-zinc-400">1:59 PM</span>
+                    </div>
+                    <div class="bg-zinc-700 rounded-lg p-3">
+                      <div class="text-sm text-zinc-300">
+                        Was that from my last PR?
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Message input -->
+              <div class="p-4 border-t border-zinc-700">
+                <div class="bg-zinc-700 rounded-lg p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <button class="text-zinc-400 hover:text-zinc-200">
+                        +
+                      </button>
+                      <button class="text-zinc-400 hover:text-zinc-200">
+                        @
+                      </button>
+                      <span class="text-zinc-500 text-sm">Message Brandon</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button
+                        class="px-3 py-1 rounded text-xs bg-emerald-600 text-white"
+                      >
+                        Boost
+                      </button>
+                      <button
+                        class="px-3 py-1 rounded text-xs bg-emerald-600 text-white"
+                      >
+                        ▶
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mgmt Boost Panel (initially hidden) -->
+            <div
+              id="mgmtBoostPanel"
+              class="absolute right-0 top-0 w-full sm:w-96 h-full bg-white text-zinc-900 transform translate-x-full transition-transform duration-500 ease-out shadow-2xl z-20"
+            >
+              <div class="h-full flex flex-col">
+                <!-- Panel header -->
+                <div
+                  class="flex items-center justify-between p-4 border-b border-zinc-200 bg-zinc-50"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-8 h-8 bg-zinc-800 rounded flex items-center justify-center"
+                    >
+                      <span class="text-white font-bold text-sm">M</span>
+                    </div>
+                    <h3 class="font-semibold">Mgmt Boost</h3>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button
+                      id="settingsBtn"
+                      class="p-2 rounded hover:bg-zinc-200 transition-colors"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      id="closePanelBtn"
+                      class="p-1 rounded hover:bg-zinc-200 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Panel tabs -->
+                <div id="panelTabs" class="flex border-b border-zinc-200">
+                  <button
+                    class="flex-1 p-2 text-xs font-medium bg-zinc-100 border-b-2 border-zinc-300 text-zinc-900"
+                    data-tab="dashboard"
+                  >
+                    Dashboard
                   </button>
-                  <button id="closePanelBtn" class="p-1 rounded hover:bg-zinc-200 transition-colors">×</button>
+                  <button
+                    class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
+                    data-tab="daily"
+                  >
+                    Daily Log
+                  </button>
+                  <button
+                    class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
+                    data-tab="calendar"
+                  >
+                    Calendar
+                  </button>
+                  <button
+                    class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
+                    data-tab="guide"
+                  >
+                    Field Guide
+                  </button>
+                </div>
+
+                <!-- Panel content -->
+                <div class="flex-1 p-4 overflow-y-auto">
+                  <!-- Dashboard content -->
+                  <div id="dashboard-content" class="space-y-6">
+                    <!-- Team section -->
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Team</h4>
+                      <div class="space-y-3">
+                        <!-- @sarah card -->
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">@sarah</span>
+                            <span
+                              class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full"
+                              >POSITIVE</span
+                            >
+                          </div>
+                          <div class="space-y-2 text-sm">
+                            <div class="flex items-center gap-2">
+                              <span
+                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded"
+                                >1:1</span
+                              >
+                              <span class="text-zinc-600 text-xs"
+                                >Discussed Q4 goals and career growth</span
+                              >
+                              <span class="text-zinc-400 text-xs">2h ago</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <span
+                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded"
+                                >Feedback</span
+                              >
+                              <span class="text-zinc-600 text-xs"
+                                >Great work on the project launch</span
+                              >
+                              <span class="text-zinc-400 text-xs">1d ago</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- @tom card -->
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">@tom</span>
+                            <span
+                              class="px-2 py-1 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-full"
+                              >NEUTRAL</span
+                            >
+                          </div>
+                          <div class="space-y-2 text-sm">
+                            <div class="flex items-center gap-2">
+                              <span
+                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded"
+                                >1:1</span
+                              >
+                              <span class="text-zinc-600 text-xs"
+                                >Performance review discussion</span
+                              >
+                              <span class="text-zinc-400 text-xs">3d ago</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- @alex card -->
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">@alex</span>
+                            <span
+                              class="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full"
+                              >CONCERNED</span
+                            >
+                          </div>
+                          <div class="space-y-2 text-sm">
+                            <div class="flex items-center gap-2">
+                              <span
+                                class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded"
+                                >Check-in</span
+                              >
+                              <span class="text-zinc-600 text-xs"
+                                >Workload seems overwhelming</span
+                              >
+                              <span class="text-zinc-400 text-xs">5h ago</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Manager section -->
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Manager</h4>
+                      <div class="text-zinc-500 text-sm">
+                        No recent activity
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Daily Log content -->
+                  <div id="daily-content" class="space-y-4 hidden">
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Daily Log</h4>
+                      <textarea
+                        class="w-full h-64 p-3 border border-zinc-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                        placeholder="Today's notes...&#10;&#10;• 1:1 with Sarah - discussed Q4 goals&#10;• Team retro - need to address workload concerns&#10;• Project launch went well, celebrate the win!"
+                      ></textarea>
+                      <div class="text-xs text-zinc-500 mb-2">
+                        Autosaving...
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Calendar content -->
+                  <div id="calendar-content" class="space-y-4 hidden">
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Today's Meetings</h4>
+                      <div class="space-y-3">
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">1:1 with Sarah</span>
+                            <span class="text-xs text-zinc-500">2:00 PM</span>
+                          </div>
+                          <div class="text-sm text-zinc-600 mb-2">
+                            Weekly check-in
+                          </div>
+                          <button
+                            class="text-xs text-emerald-600 hover:text-emerald-700"
+                          >
+                            Add notes
+                          </button>
+                        </div>
+
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Team Retrospective</span>
+                            <span class="text-xs text-zinc-500">4:00 PM</span>
+                          </div>
+                          <div class="text-sm text-zinc-600 mb-2">
+                            Sprint review and planning
+                          </div>
+                          <button
+                            class="text-xs text-emerald-600 hover:text-emerald-700"
+                          >
+                            Add notes
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Field Guide content -->
+                  <div id="guide-content" class="space-y-4 hidden">
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Field Guide</h4>
+                      <div class="mb-4">
+                        <input
+                          type="text"
+                          placeholder="Search resources..."
+                          class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                        />
+                      </div>
+                      <div class="space-y-3">
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="font-medium text-emerald-600 mb-1">
+                            Conflict Resolution
+                          </div>
+                          <div class="text-sm text-zinc-600">
+                            Step-by-step guide for handling difficult
+                            conversations
+                          </div>
+                        </div>
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="font-medium text-emerald-600 mb-1">
+                            1:1 Best Practices
+                          </div>
+                          <div class="text-sm text-zinc-600">
+                            Framework for effective one-on-one meetings
+                          </div>
+                        </div>
+                        <div
+                          class="border border-zinc-200 rounded-lg p-3 bg-white"
+                        >
+                          <div class="font-medium text-emerald-600 mb-1">
+                            Feedback Framework
+                          </div>
+                          <div class="text-sm text-zinc-600">
+                            How to give and receive constructive feedback
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Settings content -->
+                  <div id="settings-content" class="space-y-4 hidden">
+                    <div>
+                      <h4 class="font-bold text-lg mb-3">Settings</h4>
+                      <div class="space-y-4">
+                        <div>
+                          <label
+                            class="block text-zinc-700 font-medium mb-2 text-sm"
+                            >Report to:</label
+                          >
+                          <input
+                            type="text"
+                            value="@RJackson"
+                            class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="block text-zinc-700 font-medium mb-2 text-sm"
+                            >Reports:</label
+                          >
+                          <input
+                            type="text"
+                            value="@sarah, @tom, @alex"
+                            class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="block text-zinc-700 font-medium mb-2 text-sm"
+                            >Channels</label
+                          >
+                          <input
+                            type="text"
+                            value="#general, #engineering, #product"
+                            class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            class="block text-zinc-700 font-medium mb-2 text-sm"
+                            >OpenAI API Key</label
+                          >
+                          <input
+                            type="password"
+                            value="sk-..."
+                            class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900"
+                          />
+                        </div>
+                        <div>
+                          <button
+                            id="promptOverridesBtn"
+                            class="flex items-center justify-between w-full p-2 text-left hover:bg-zinc-50 rounded-lg transition-colors"
+                          >
+                            <label class="text-zinc-700 font-medium text-sm"
+                              >Prompt Overrides</label
+                            >
+                            <svg
+                              id="promptArrow"
+                              class="w-4 h-4 text-zinc-500 transform transition-transform"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              ></path>
+                            </svg>
+                          </button>
+                          <div
+                            id="promptOverridesContent"
+                            class="hidden mt-2 p-3 bg-zinc-50 rounded-lg"
+                          >
+                            <textarea
+                              placeholder="Custom prompt overrides..."
+                              class="w-full h-24 p-2 border border-zinc-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900 text-sm"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="pt-2">
+                          <button
+                            class="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors"
+                          >
+                            Save Settings
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <!-- Panel tabs -->
-              <div id="panelTabs" class="flex border-b border-zinc-200">
-                <button class="flex-1 p-2 text-xs font-medium bg-zinc-100 border-b-2 border-zinc-300 text-zinc-900" data-tab="dashboard">Dashboard</button>
-                <button class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50" data-tab="daily">Daily Log</button>
-                <button class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50" data-tab="calendar">Calendar</button>
-                <button class="flex-1 p-2 text-xs text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50" data-tab="guide">Field Guide</button>
+            </div>
+
+            <!-- Feature highlights modal -->
+            <div
+              id="featureModal"
+              class="hidden sm:block absolute top-40 left-0 w-72 sm:w-80 bg-white rounded-lg shadow-xl p-4 transform -translate-x-full transition-transform duration-500 z-30"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-semibold text-emerald-600" id="modalTitle">
+                  Dashboard Features
+                </h4>
+                <button
+                  id="closeModalBtn"
+                  class="text-zinc-400 hover:text-zinc-600"
+                >
+                  ×
+                </button>
               </div>
-              
-              <!-- Panel content -->
-              <div class="flex-1 p-4 overflow-y-auto">
-                <!-- Dashboard content -->
-                <div id="dashboard-content" class="space-y-6">
-                  <!-- Team section -->
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Team</h4>
-                    <div class="space-y-3">
-                      <!-- @sarah card -->
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="flex items-center justify-between mb-2">
-                          <span class="font-medium">@sarah</span>
-                          <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">POSITIVE</span>
-                        </div>
-                        <div class="space-y-2 text-sm">
-                          <div class="flex items-center gap-2">
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">1:1</span>
-                            <span class="text-zinc-600">Discussed Q4 goals and career growth</span>
-                            <span class="text-zinc-400 text-xs">2h ago</span>
-                          </div>
-                          <div class="flex items-center gap-2">
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Feedback</span>
-                            <span class="text-zinc-600">Great work on the project launch</span>
-                            <span class="text-zinc-400 text-xs">1d ago</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- @tom card -->
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="flex items-center justify-between mb-2">
-                          <span class="font-medium">@tom</span>
-                          <span class="px-2 py-1 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-full">NEUTRAL</span>
-                        </div>
-                        <div class="space-y-2 text-sm">
-                          <div class="flex items-center gap-2">
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">1:1</span>
-                            <span class="text-zinc-600">Performance review discussion</span>
-                            <span class="text-zinc-400 text-xs">3d ago</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- @alex card -->
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="flex items-center justify-between mb-2">
-                          <span class="font-medium">@alex</span>
-                          <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">CONCERNED</span>
-                        </div>
-                        <div class="space-y-2 text-sm">
-                          <div class="flex items-center gap-2">
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Check-in</span>
-                            <span class="text-zinc-600">Workload seems overwhelming</span>
-                            <span class="text-zinc-400 text-xs">5h ago</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Manager section -->
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Manager</h4>
-                    <div class="text-zinc-500 text-sm">No recent activity</div>
-                  </div>
-                </div>
-                
-                <!-- Daily Log content -->
-                <div id="daily-content" class="space-y-4 hidden">
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Daily Log</h4>
-                    <div class="text-xs text-zinc-500 mb-2">Autosaving...</div>
-                    <textarea class="w-full h-64 p-3 border border-zinc-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900" placeholder="Today's notes...&#10;&#10;• 1:1 with Sarah - discussed Q4 goals&#10;• Team retro - need to address workload concerns&#10;• Project launch went well, celebrate the win!"></textarea>
-                  </div>
-                </div>
-                
-                <!-- Calendar content -->
-                <div id="calendar-content" class="space-y-4 hidden">
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Today's Meetings</h4>
-                    <div class="space-y-3">
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="flex items-center justify-between mb-2">
-                          <span class="font-medium">1:1 with Sarah</span>
-                          <span class="text-xs text-zinc-500">2:00 PM</span>
-                        </div>
-                        <div class="text-sm text-zinc-600 mb-2">Weekly check-in</div>
-                        <button class="text-xs text-emerald-600 hover:text-emerald-700">Add notes</button>
-                      </div>
-                      
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="flex items-center justify-between mb-2">
-                          <span class="font-medium">Team Retrospective</span>
-                          <span class="text-xs text-zinc-500">4:00 PM</span>
-                        </div>
-                        <div class="text-sm text-zinc-600 mb-2">Sprint review and planning</div>
-                        <button class="text-xs text-emerald-600 hover:text-emerald-700">Add notes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Field Guide content -->
-                <div id="guide-content" class="space-y-4 hidden">
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Field Guide</h4>
-                    <div class="mb-4">
-                      <input type="text" placeholder="Search resources..." class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900">
-                    </div>
-                    <div class="space-y-3">
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="font-medium text-emerald-600 mb-1">Conflict Resolution</div>
-                        <div class="text-sm text-zinc-600">Step-by-step guide for handling difficult conversations</div>
-                      </div>
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="font-medium text-emerald-600 mb-1">1:1 Best Practices</div>
-                        <div class="text-sm text-zinc-600">Framework for effective one-on-one meetings</div>
-                      </div>
-                      <div class="border border-zinc-200 rounded-lg p-3 bg-white">
-                        <div class="font-medium text-emerald-600 mb-1">Feedback Framework</div>
-                        <div class="text-sm text-zinc-600">How to give and receive constructive feedback</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Settings content -->
-                <div id="settings-content" class="space-y-4 hidden">
-                  <div>
-                    <h4 class="font-bold text-lg mb-3">Settings</h4>
-                    <div class="space-y-4">
-                      <div>
-                        <label class="block text-zinc-700 font-medium mb-2 text-sm">Report to:</label>
-                        <input type="text" value="@RJackson" class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900">
-                      </div>
-                      <div>
-                        <label class="block text-zinc-700 font-medium mb-2 text-sm">Reports:</label>
-                        <input type="text" value="@sarah, @tom, @alex" class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900">
-                      </div>
-                      <div>
-                        <label class="block text-zinc-700 font-medium mb-2 text-sm">Channels</label>
-                        <input type="text" value="#general, #engineering, #product" class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900">
-                      </div>
-                      <div>
-                        <label class="block text-zinc-700 font-medium mb-2 text-sm">OpenAI API Key</label>
-                        <input type="password" value="sk-..." class="w-full p-2 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900">
-                      </div>
-                      <div>
-                        <button id="promptOverridesBtn" class="flex items-center justify-between w-full p-2 text-left hover:bg-zinc-50 rounded-lg transition-colors">
-                          <label class="text-zinc-700 font-medium text-sm">Prompt Overrides</label>
-                          <svg id="promptArrow" class="w-4 h-4 text-zinc-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                          </svg>
-                        </button>
-                        <div id="promptOverridesContent" class="hidden mt-2 p-3 bg-zinc-50 rounded-lg">
-                          <textarea placeholder="Custom prompt overrides..." class="w-full h-24 p-2 border border-zinc-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white text-zinc-900 text-sm"></textarea>
-                        </div>
-                      </div>
-                      <div class="pt-2">
-                        <button class="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors">
-                          Save Settings
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="space-y-3 text-sm" id="modalContent">
+                <!-- Content will be dynamically updated based on selected tab -->
               </div>
             </div>
           </div>
-          
-                      <!-- Feature highlights modal -->
-            <div id="featureModal" class="hidden sm:block absolute top-40 left-0 w-72 sm:w-80 bg-white rounded-lg shadow-xl p-4 transform -translate-x-full transition-transform duration-500 z-30">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-semibold text-emerald-600" id="modalTitle">Dashboard Features</h4>
-              <button id="closeModalBtn" class="text-zinc-400 hover:text-zinc-600">×</button>
-            </div>
-            <div class="space-y-3 text-sm" id="modalContent">
-              <!-- Content will be dynamically updated based on selected tab -->
-            </div>
+        </div>
+      </section>
+
+      <!-- Supporting text -->
+      <section class="mt-6">
+        <div class="grid md:grid-cols-4 gap-6">
+          <div>
+            <h4 class="font-medium text-emerald-400 mb-2">Dashboard</h4>
+            <p class="text-sm text-zinc-300">
+              Real-time team pulse, sentiment tracking, and activity insights to
+              help you stay connected with your team's needs.
+            </p>
           </div>
-          
-
+          <div>
+            <h4 class="font-medium text-emerald-400 mb-2">Daily Log</h4>
+            <p class="text-sm text-zinc-300">
+              Autosaving notepad for daily management notes, 1:1 insights, and
+              quick observations that build over time.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-medium text-emerald-400 mb-2">Calendar</h4>
+            <p class="text-sm text-zinc-300">
+              Enhanced calendar view with meeting prep flags, notes, and
+              management context for your existing events.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-medium text-emerald-400 mb-2">Field Guide</h4>
+            <p class="text-sm text-zinc-300">
+              Searchable knowledge base with conflict resolution checklists,
+              management frameworks, and best practices.
+            </p>
+          </div>
         </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="mt-16">
+        <h3 class="text-center font-semibold text-lg">FAQ</h3>
+        <div class="mt-6 grid md:grid-cols-2 gap-6">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+            <div class="font-semibold">Is my data safe?</div>
+            <p class="mt-2 text-zinc-300">
+              Yes. Your data stays with you. All processing happens in your
+              browser, using your API key. Notes live in your Google Drive, and
+              your calendar access never leaves your device.
+            </p>
+          </div>
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+            <div class="font-semibold">Does this replace my tools?</div>
+            <p class="mt-2 text-zinc-300">
+              No. It works where you already are — Slack, Drive, and Calendar.
+              No extra dashboards to manage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer CTA -->
+      <section class="mt-16 text-center">
+        <h4 class="text-xl font-semibold">Want early access?</h4>
+        <p class="mt-2 text-zinc-300">
+          Join the private alpha and help shape mgmt-boost.
+        </p>
+        <button
+          onclick="document.querySelector('#waitlistForm input[type=email]').focus()"
+          class="mt-4 px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400"
+        >
+          Join the private alpha
+        </button>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-900">
+      <div
+        class="max-w-5xl mx-auto px-4 py-8 text-xs text-zinc-500 flex flex-col md:flex-row gap-2 md:items-center md:justify-between"
+      >
+        <span>© <span id="y"></span> mgmt-boost</span>
       </div>
-    </section>
-    
-    <!-- Supporting text -->
-    <section class="mt-6">
-      <div class="grid md:grid-cols-4 gap-6">
-        <div>
-          <h4 class="font-medium text-emerald-400 mb-2">Dashboard</h4>
-          <p class="text-sm text-zinc-300">Real-time team pulse, sentiment tracking, and activity insights to help you stay connected with your team's needs.</p>
-        </div>
-        <div>
-          <h4 class="font-medium text-emerald-400 mb-2">Daily Log</h4>
-          <p class="text-sm text-zinc-300">Autosaving notepad for daily management notes, 1:1 insights, and quick observations that build over time.</p>
-        </div>
-        <div>
-          <h4 class="font-medium text-emerald-400 mb-2">Calendar</h4>
-          <p class="text-sm text-zinc-300">Enhanced calendar view with meeting prep flags, notes, and management context for your existing events.</p>
-        </div>
-        <div>
-          <h4 class="font-medium text-emerald-400 mb-2">Field Guide</h4>
-          <p class="text-sm text-zinc-300">Searchable knowledge base with conflict resolution checklists, management frameworks, and best practices.</p>
-        </div>
-      </div>
-    </section>
+    </footer>
 
-    <!-- FAQ -->
-    <section class="mt-16">
-      <h3 class="text-center font-semibold text-lg">FAQ</h3>
-      <div class="mt-6 grid md:grid-cols-2 gap-6">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <div class="font-semibold">Is my data safe?</div>
-          <p class="mt-2 text-zinc-300">Yes. Your data stays with you. All processing happens in your browser, using your API key. Notes live in your Google Drive, and your calendar access never leaves your device.</p>
-        </div>
-        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <div class="font-semibold">Does this replace my tools?</div>
-          <p class="mt-2 text-zinc-300">No. It works where you already are — Slack, Drive, and Calendar. No extra dashboards to manage.</p>
-        </div>
-      </div>
-    </section>
+    <!-- Demo scenarios and animations -->
+    <script>
+      const scenarios = {
+        1: {
+          topic: "Urgency",
+          text: "Fix this ASAP!",
+          boosted: "Could you please address this issue as soon as possible?",
+          notification: "Tone: Professional and clear",
+        },
+        2: {
+          topic: "Feedback",
+          text: "This is completely wrong. Do it again.",
+          boosted:
+            "I noticed some issues with this. Could you please review and make the necessary adjustments?",
+          notification: "Tone: Constructive and collaborative",
+        },
+        3: {
+          topic: "Timeline",
+          text: "Why is this taking so long?",
+          boosted:
+            "I'm wondering about the timeline for this. Could you give me an update on the progress?",
+          notification: "Tone: Curious and supportive",
+        },
+        4: {
+          topic: "Requests",
+          text: "Can you review this PR?",
+          boosted: "Could you please review this PR by tomorrow morning?",
+          notification: "Tone: Clear with timeframe",
+        },
+        5: {
+          topic: "Strategy",
+          text: "I think we should maybe try another approach. The current plan is risky and may cause scaling issues, so I'd propose we...",
+          boosted:
+            "We may hit scaling issues with this plan — let's consider another approach.",
+          notification: "Tone: Concise and actionable",
+        },
+        6: {
+          topic: "Celebration",
+          text: "Release shipped.",
+          boosted: "Release shipped 🎉 Great work everyone!",
+          notification: "Tone: Celebratory and motivating",
+        },
+        7: {
+          topic: "De-escalation",
+          text: "Stop spamming the channel, just file the ticket!!",
+          boosted:
+            "Let's keep the channel focused — can you file a ticket so we can track this properly? Thanks.",
+          notification: "Tone: De-escalated and constructive",
+        },
+        8: {
+          topic: "Deadlines",
+          text: "This deadline is non-negotiable.",
+          boosted:
+            "This deadline is important for our project timeline. Can we discuss any blockers?",
+          notification: "Tone: Firm but collaborative",
+        },
+        9: {
+          topic: "Status Updates",
+          text: "What's the status on this?",
+          boosted:
+            "Could you give me a quick update on the current status of this project?",
+          notification: "Tone: Professional and specific",
+        },
+        10: {
+          topic: "Performance",
+          text: "This is unacceptable.",
+          boosted:
+            "I'm concerned about this outcome. Let's discuss what happened and how we can improve.",
+          notification: "Tone: Constructive and solution-focused",
+        },
+      };
 
-    <!-- Footer CTA -->
-    <section class="mt-16 text-center">
-      <h4 class="text-xl font-semibold">Want early access?</h4>
-      <p class="mt-2 text-zinc-300">Join the private alpha and help shape mgmt-boost.</p>
-      <button onclick="document.querySelector('#waitlistForm input[type=email]').focus()"
-              class="mt-4 px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">
-        Join the private alpha
-      </button>
-    </section>
-  </main>
+      let currentScenario = 0;
 
-  <!-- Footer -->
-  <footer class="border-t border-zinc-900">
-    <div class="max-w-5xl mx-auto px-4 py-8 text-xs text-zinc-500 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
-      <span>© <span id="y"></span> mgmt-boost</span>
-    </div>
-  </footer>
-
-  <!-- Demo scenarios and animations -->
-  <script>
-    const scenarios = {
-      1: {
-        topic: "Urgency",
-        text: "Fix this ASAP!",
-        boosted: "Could you please address this issue as soon as possible?",
-        notification: "Tone: Professional and clear"
-      },
-      2: {
-        topic: "Feedback",
-        text: "This is completely wrong. Do it again.",
-        boosted: "I noticed some issues with this. Could you please review and make the necessary adjustments?",
-        notification: "Tone: Constructive and collaborative"
-      },
-      3: {
-        topic: "Timeline",
-        text: "Why is this taking so long?",
-        boosted: "I'm wondering about the timeline for this. Could you give me an update on the progress?",
-        notification: "Tone: Curious and supportive"
-      },
-      4: {
-        topic: "Requests",
-        text: "Can you review this PR?",
-        boosted: "Could you please review this PR by tomorrow morning?",
-        notification: "Tone: Clear with timeframe"
-      },
-      5: {
-        topic: "Strategy",
-        text: "I think we should maybe try another approach. The current plan is risky and may cause scaling issues, so I'd propose we...",
-        boosted: "We may hit scaling issues with this plan — let's consider another approach.",
-        notification: "Tone: Concise and actionable"
-      },
-      6: {
-        topic: "Celebration",
-        text: "Release shipped.",
-        boosted: "Release shipped 🎉 Great work everyone!",
-        notification: "Tone: Celebratory and motivating"
-      },
-      7: {
-        topic: "De-escalation",
-        text: "Stop spamming the channel, just file the ticket!!",
-        boosted: "Let's keep the channel focused — can you file a ticket so we can track this properly? Thanks.",
-        notification: "Tone: De-escalated and constructive"
-      },
-      8: {
-        topic: "Deadlines",
-        text: "This deadline is non-negotiable.",
-        boosted: "This deadline is important for our project timeline. Can we discuss any blockers?",
-        notification: "Tone: Firm but collaborative"
-      },
-      9: {
-        topic: "Status Updates",
-        text: "What's the status on this?",
-        boosted: "Could you give me a quick update on the current status of this project?",
-        notification: "Tone: Professional and specific"
-      },
-      10: {
-        topic: "Performance",
-        text: "This is unacceptable.",
-        boosted: "I'm concerned about this outcome. Let's discuss what happened and how we can improve.",
-        notification: "Tone: Constructive and solution-focused"
+      // Helper function for delays
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
       }
-    };
 
-    let currentScenario = 0;
+      async function runScenario(scenarioNum) {
+        currentScenario = scenarioNum;
+        const scenario = scenarios[scenarioNum];
 
-    // Helper function for delays
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
+        // Reset UI
+        hideNotification();
+        hideBoostedMessage();
 
-    async function runScenario(scenarioNum) {
-      currentScenario = scenarioNum;
-      const scenario = scenarios[scenarioNum];
-      
-      // Reset UI
-      hideNotification();
-      hideBoostedMessage();
-      
-      // Update active scenario button
-      updateActiveScenarioButton(scenarioNum);
-      
-      // Update current topic display
-      const topicElement = document.getElementById('currentTopic');
-      if (topicElement) {
-        topicElement.textContent = scenario.topic;
-      }
-      
-      try {
-        // Step 1: Type the scenario text
-        console.log('📝 Starting to type scenario text...');
-        await typeText(scenario.text);
-        await delay(500);
-        // Step 2: Show boosting state
-        console.log('🚀 Starting boost process...');
-        await testBoostStates.showBoosting();
-        await delay(500);
-        // Step 3: Wait for API simulation (1.5 seconds)
-        console.log('⏳ Simulating API delay...');
-        await delay(1500);
-        
-        // Step 4: Show response
-        console.log('✅ Showing boost response...');
-        await testBoostStates.showResponse(scenario.boosted);
-        showNotification(scenario.notification);
-        
-        console.log('🎉 Scenario complete!');
-      } catch (error) {
-        console.error('❌ Error in scenario:', error);
-      }
-    }
+        // Update active scenario button
+        updateActiveScenarioButton(scenarioNum);
 
-    function updateActiveScenarioButton(activeNum) {
-      // Remove green border from all scenario buttons
-      document.querySelectorAll('[onclick^="runScenario"]').forEach(btn => {
-        btn.classList.remove('border-emerald-500');
-        btn.classList.add('bg-zinc-800');
-      });
-      
-      // Add green border to active scenario button
-      const activeBtn = document.querySelector(`[onclick="runScenario(${activeNum})"]`);
-      if (activeBtn) {
-        activeBtn.classList.add('border-emerald-500');
-        activeBtn.classList.remove('bg-zinc-800');
-      }
-    }
-
-    function typeText(text) {
-      return new Promise((resolve) => {
-        const textarea = document.getElementById('demoTextarea');
-        textarea.value = '';
-        
-        // Clear any existing typing interval
-        if (window.currentTypeInterval) {
-          clearInterval(window.currentTypeInterval);
+        // Update current topic display
+        const topicElement = document.getElementById("currentTopic");
+        if (topicElement) {
+          topicElement.textContent = scenario.topic;
         }
-        
-        let i = 0;
-        window.currentTypeInterval = setInterval(() => {
-          textarea.value += text.charAt(i);
-          i++;
-          if (i >= text.length) {
+
+        try {
+          // Step 1: Type the scenario text
+          console.log("📝 Starting to type scenario text...");
+          await typeText(scenario.text);
+          await delay(500);
+          // Step 2: Show boosting state
+          console.log("🚀 Starting boost process...");
+          await testBoostStates.showBoosting();
+          await delay(500);
+          // Step 3: Wait for API simulation (1.5 seconds)
+          console.log("⏳ Simulating API delay...");
+          await delay(1500);
+
+          // Step 4: Show response
+          console.log("✅ Showing boost response...");
+          await testBoostStates.showResponse(scenario.boosted);
+          showNotification(scenario.notification);
+
+          console.log("🎉 Scenario complete!");
+        } catch (error) {
+          console.error("❌ Error in scenario:", error);
+        }
+      }
+
+      function updateActiveScenarioButton(activeNum) {
+        // Remove green border from all scenario buttons
+        document.querySelectorAll('[onclick^="runScenario"]').forEach((btn) => {
+          btn.classList.remove("border-emerald-500");
+          btn.classList.add("bg-zinc-800");
+        });
+
+        // Add green border to active scenario button
+        const activeBtn = document.querySelector(
+          `[onclick="runScenario(${activeNum})"]`
+        );
+        if (activeBtn) {
+          activeBtn.classList.add("border-emerald-500");
+          activeBtn.classList.remove("bg-zinc-800");
+        }
+      }
+
+      function typeText(text) {
+        return new Promise((resolve) => {
+          const textarea = document.getElementById("demoTextarea");
+          textarea.value = "";
+
+          // Clear any existing typing interval
+          if (window.currentTypeInterval) {
             clearInterval(window.currentTypeInterval);
-            window.currentTypeInterval = null;
-            // Small delay after typing completes
-            setTimeout(resolve, 100);
           }
-        }, 50);
-      });
-    }
 
-    function simulateBoost(scenario) {
-      const boostBtn = document.getElementById('demoBoostBtn');
-      const textarea = document.getElementById('demoTextarea');
-      
-      // Store original text for undo functionality
-      window.originalText = textarea.value;
-      
-      // Show loading state with gray styling - use inline styles to override CSS
-      boostBtn.textContent = 'Boosting...';
-      boostBtn.disabled = true;
-      boostBtn.style.backgroundColor = 'transparent';
-      boostBtn.style.borderColor = '#52525b'; // zinc-600
-      boostBtn.style.color = '#a1a1aa'; // zinc-400
-      boostBtn.style.border = '1px solid #52525b';
-      
-      // Simulate API delay
-      setTimeout(() => {
-        // Show boosted message first (replaces original textarea)
-        showBoostedMessage(scenario.boosted);
-        
-        // Show notification at the same time
-        showNotification(scenario.notification);
-        
-        // Reset button
-        boostBtn.textContent = 'Boost';
-        boostBtn.disabled = false;
-        boostBtn.style.backgroundColor = '';
-        boostBtn.style.borderColor = '';
-        boostBtn.style.color = '';
-        boostBtn.style.border = '';
-      }, 1500);
-    }
+          let i = 0;
+          window.currentTypeInterval = setInterval(() => {
+            textarea.value += text.charAt(i);
+            i++;
+            if (i >= text.length) {
+              clearInterval(window.currentTypeInterval);
+              window.currentTypeInterval = null;
+              // Small delay after typing completes
+              setTimeout(resolve, 100);
+            }
+          }, 50);
+        });
+      }
 
-    function showNotification(text) {
-      const notification = document.getElementById('demoNotification');
-      const notificationText = document.getElementById('notificationText');
-      
-      notificationText.textContent = text;
-      
-      // Show notification smoothly
-      notification.style.pointerEvents = 'auto';
-      notification.style.opacity = '1';
-    }
+      function simulateBoost(scenario) {
+        const boostBtn = document.getElementById("demoBoostBtn");
+        const textarea = document.getElementById("demoTextarea");
 
-    function hideNotification() {
-      const notification = document.getElementById('demoNotification');
-      
-      // Smooth fade out
-      notification.style.opacity = '0';
-      notification.style.pointerEvents = 'none';
-    }
-
-    function showBoostedMessage(text) {
-      const textarea = document.getElementById('demoTextarea');
-      
-      // Update the textarea content
-      textarea.value = text;
-      
-      // Add transition for smooth border animation
-      textarea.style.transition = 'border-color 0.3s ease-out';
-      textarea.classList.add('border-green-500');
-      
-      // Fade out border slowly after 2 seconds
-      setTimeout(() => {
-        textarea.style.transition = 'border-color 1s ease-out';
-        textarea.classList.remove('border-green-500');
-      }, 2000);
-    }
-
-    function hideBoostedMessage() {
-      // No longer needed since we're using one textarea
-    }
-
-    function undoBoost() {
-      // Restore the original text
-      const textarea = document.getElementById('demoTextarea');
-      textarea.value = window.originalText || '';
-      
-      // Remove green border if present
-      textarea.classList.remove('border-green-500');
-      
-      hideNotification();
-      
-      // Reset boost button to normal state
-      const boostBtn = document.getElementById('demoBoostBtn');
-      boostBtn.textContent = 'Boost';
-      boostBtn.disabled = false;
-      boostBtn.classList.remove('bg-transparent', 'border-zinc-600', 'text-zinc-400');
-      boostBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-    }
-
-    // Manual boost button - use event delegation to ensure it works
-    document.addEventListener('click', (e) => {
-      if (e.target && e.target.id === 'demoBoostBtn') {
-        console.log('Boost button clicked!');
-        
-        const textarea = document.getElementById('demoTextarea');
-        const text = textarea.value.trim();
-        
-        if (!text) {
-          showNotification('Please type a message first');
-          return;
-        }
-        
         // Store original text for undo functionality
-        window.originalText = text;
-        
-        // Enhanced boost logic for demo
-        let boosted = text;
-        let notification = 'Tone: Neutral';
-        
-        if (text.toLowerCase().includes('asap') || text.toLowerCase().includes('urgent')) {
-          boosted = text.replace(/asap/gi, 'as soon as possible').replace(/urgent/gi, 'priority');
-          notification = 'Tone: Professional and clear';
-        } else if (text.toLowerCase().includes('wrong') || text.toLowerCase().includes('bad') || text.toLowerCase().includes('unacceptable')) {
-          boosted = text.replace(/wrong/gi, 'needs adjustment').replace(/bad/gi, 'could be improved').replace(/unacceptable/gi, 'concerning');
-          notification = 'Tone: Constructive and helpful';
-        } else if (text.toLowerCase().includes('review') && !text.toLowerCase().includes('by')) {
-          boosted = text + ' by tomorrow morning?';
-          notification = 'Tone: Clear with timeframe';
-        } else if (text.toLowerCase().includes('shipped') || text.toLowerCase().includes('released')) {
-          boosted = text + ' 🎉 Great work everyone!';
-          notification = 'Tone: Celebratory and motivating';
-        } else if (text.toLowerCase().includes('stop') || text.toLowerCase().includes('spamming')) {
-          boosted = text.replace(/stop spamming/gi, 'let\'s keep the channel focused').replace(/just file/gi, 'can you file');
-          notification = 'Tone: De-escalated and constructive';
-        } else if (text.toLowerCase().includes('non-negotiable')) {
-          boosted = text.replace(/non-negotiable/gi, 'important for our project timeline. Can we discuss any blockers?');
-          notification = 'Tone: Firm but collaborative';
-        } else if (text.toLowerCase().includes('status')) {
-          boosted = text.replace(/what's the status/gi, 'could you give me a quick update on the current status');
-          notification = 'Tone: Professional and specific';
-        }
-        
-        // Use the same testing methods for consistency
-        testBoostStates.showBoosting();
-        
-        // Simulate API delay, then show response
+        window.originalText = textarea.value;
+
+        // Show loading state with gray styling - use inline styles to override CSS
+        boostBtn.textContent = "Boosting...";
+        boostBtn.disabled = true;
+        boostBtn.style.backgroundColor = "transparent";
+        boostBtn.style.borderColor = "#52525b"; // zinc-600
+        boostBtn.style.color = "#a1a1aa"; // zinc-400
+        boostBtn.style.border = "1px solid #52525b";
+
+        // Simulate API delay
         setTimeout(() => {
-          testBoostStates.showResponse(boosted);
-          showNotification(notification);
+          // Show boosted message first (replaces original textarea)
+          showBoostedMessage(scenario.boosted);
+
+          // Show notification at the same time
+          showNotification(scenario.notification);
+
+          // Reset button
+          boostBtn.textContent = "Boost";
+          boostBtn.disabled = false;
+          boostBtn.style.backgroundColor = "";
+          boostBtn.style.borderColor = "";
+          boostBtn.style.color = "";
+          boostBtn.style.border = "";
         }, 1500);
       }
-    });
 
-    // Auto-run scenario 1 on page load
-    setTimeout(() => {
-      runScenario(1);
-    }, 2000);
+      function showNotification(text) {
+        const notification = document.getElementById("demoNotification");
+        const notificationText = document.getElementById("notificationText");
 
-    // Show/hide boost button based on text input
-    document.getElementById('demoTextarea')?.addEventListener('input', (e) => {
-      const boostBtn = document.getElementById('demoBoostBtn');
-      const hasText = e.target.value.trim().length > 0;
-      
-      if (hasText) {
-        boostBtn.style.display = 'block';
-        boostBtn.style.animation = 'slideIn 0.3s ease-out';
-      } else {
-        boostBtn.style.display = 'none';
+        notificationText.textContent = text;
+
+        // Show notification smoothly
+        notification.style.pointerEvents = "auto";
+        notification.style.opacity = "1";
       }
-    });
 
-    // Console testing functions
-    window.testBoostStates = {
-      // Test typing state
-      showTyping: (text = "Test message") => {
-        console.log('🧪 Testing typing state...');
-        const textarea = document.getElementById('demoTextarea');
+      function hideNotification() {
+        const notification = document.getElementById("demoNotification");
+
+        // Smooth fade out
+        notification.style.opacity = "0";
+        notification.style.pointerEvents = "none";
+      }
+
+      function showBoostedMessage(text) {
+        const textarea = document.getElementById("demoTextarea");
+
+        // Update the textarea content
         textarea.value = text;
-        textarea.dispatchEvent(new Event('input'));
-        console.log('✅ Typing state: Textarea has text, boost button should be visible');
-      },
 
-      // Test boost button click state
-      showBoosting: () => {
-        return new Promise((resolve) => {
-          console.log('🧪 Testing boost button state...');
-          const boostBtn = document.getElementById('demoBoostBtn');
-          
-          if (!boostBtn) {
-            console.error('❌ Boost button not found!');
-            resolve();
+        // Add transition for smooth border animation
+        textarea.style.transition = "border-color 0.3s ease-out";
+        textarea.classList.add("border-green-500");
+
+        // Fade out border slowly after 2 seconds
+        setTimeout(() => {
+          textarea.style.transition = "border-color 1s ease-out";
+          textarea.classList.remove("border-green-500");
+        }, 2000);
+      }
+
+      function hideBoostedMessage() {
+        // No longer needed since we're using one textarea
+      }
+
+      function undoBoost() {
+        // Restore the original text
+        const textarea = document.getElementById("demoTextarea");
+        textarea.value = window.originalText || "";
+
+        // Remove green border if present
+        textarea.classList.remove("border-green-500");
+
+        hideNotification();
+
+        // Reset boost button to normal state
+        const boostBtn = document.getElementById("demoBoostBtn");
+        boostBtn.textContent = "Boost";
+        boostBtn.disabled = false;
+        boostBtn.classList.remove(
+          "bg-transparent",
+          "border-zinc-600",
+          "text-zinc-400"
+        );
+        boostBtn.classList.add("bg-emerald-600", "hover:bg-emerald-700");
+      }
+
+      // Manual boost button - use event delegation to ensure it works
+      document.addEventListener("click", (e) => {
+        if (e.target && e.target.id === "demoBoostBtn") {
+          console.log("Boost button clicked!");
+
+          const textarea = document.getElementById("demoTextarea");
+          const text = textarea.value.trim();
+
+          if (!text) {
+            showNotification("Please type a message first");
             return;
           }
-          
-          // Store original text
-          const textarea = document.getElementById('demoTextarea');
-          window.originalText = textarea.value;
-          
-          // Show loading state with more explicit styling
-          boostBtn.textContent = 'Boosting...';
-          boostBtn.disabled = true;
-          
-          // Remove all existing classes and add inline styles
-          boostBtn.className = 'px-3 py-1 rounded text-xs transition-colors';
-          boostBtn.style.backgroundColor = 'transparent';
-          boostBtn.style.borderColor = '#52525b';
-          boostBtn.style.color = '#a1a1aa';
-          boostBtn.style.border = '1px solid #52525b';
-          boostBtn.style.cursor = 'not-allowed';
-          
-          console.log('✅ Boost button should now show "Boosting..." in gray');
-          console.log('Button text:', boostBtn.textContent);
-          console.log('Button styles:', {
-            backgroundColor: boostBtn.style.backgroundColor,
-            color: boostBtn.style.color,
-            border: boostBtn.style.border
-          });
-          
-          resolve();
-        });
-      },
 
-      // Test boost response state
-      showResponse: (boostedText = "This is a boosted test message!") => {
-        return new Promise((resolve) => {
-          console.log('🧪 Testing boost response state...');
-          const boostBtn = document.getElementById('demoBoostBtn');
-          const textarea = document.getElementById('demoTextarea');
-          
-          // Update textarea with boosted text
-          textarea.value = boostedText;
-          
-          // Add transition for smooth border animation
-          textarea.style.transition = 'border-color 0.3s ease-out';
-          textarea.classList.add('border-green-500');
-          
-          // Show notification
-          showNotification('Tone: Test response');
-          
-          // Reset button to normal state
-          boostBtn.textContent = 'Boost';
-          boostBtn.disabled = false;
-          boostBtn.className = 'px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors';
-          boostBtn.style.backgroundColor = '';
-          boostBtn.style.borderColor = '';
-          boostBtn.style.color = '';
-          boostBtn.style.border = '';
-          boostBtn.style.cursor = '';
-          
-          // Fade out border slowly after 2 seconds
+          // Store original text for undo functionality
+          window.originalText = text;
+
+          // Enhanced boost logic for demo
+          let boosted = text;
+          let notification = "Tone: Neutral";
+
+          if (
+            text.toLowerCase().includes("asap") ||
+            text.toLowerCase().includes("urgent")
+          ) {
+            boosted = text
+              .replace(/asap/gi, "as soon as possible")
+              .replace(/urgent/gi, "priority");
+            notification = "Tone: Professional and clear";
+          } else if (
+            text.toLowerCase().includes("wrong") ||
+            text.toLowerCase().includes("bad") ||
+            text.toLowerCase().includes("unacceptable")
+          ) {
+            boosted = text
+              .replace(/wrong/gi, "needs adjustment")
+              .replace(/bad/gi, "could be improved")
+              .replace(/unacceptable/gi, "concerning");
+            notification = "Tone: Constructive and helpful";
+          } else if (
+            text.toLowerCase().includes("review") &&
+            !text.toLowerCase().includes("by")
+          ) {
+            boosted = text + " by tomorrow morning?";
+            notification = "Tone: Clear with timeframe";
+          } else if (
+            text.toLowerCase().includes("shipped") ||
+            text.toLowerCase().includes("released")
+          ) {
+            boosted = text + " 🎉 Great work everyone!";
+            notification = "Tone: Celebratory and motivating";
+          } else if (
+            text.toLowerCase().includes("stop") ||
+            text.toLowerCase().includes("spamming")
+          ) {
+            boosted = text
+              .replace(/stop spamming/gi, "let's keep the channel focused")
+              .replace(/just file/gi, "can you file");
+            notification = "Tone: De-escalated and constructive";
+          } else if (text.toLowerCase().includes("non-negotiable")) {
+            boosted = text.replace(
+              /non-negotiable/gi,
+              "important for our project timeline. Can we discuss any blockers?"
+            );
+            notification = "Tone: Firm but collaborative";
+          } else if (text.toLowerCase().includes("status")) {
+            boosted = text.replace(
+              /what's the status/gi,
+              "could you give me a quick update on the current status"
+            );
+            notification = "Tone: Professional and specific";
+          }
+
+          // Use the same testing methods for consistency
+          testBoostStates.showBoosting();
+
+          // Simulate API delay, then show response
           setTimeout(() => {
-            textarea.style.transition = 'border-color 1s ease-out';
-            textarea.classList.remove('border-green-500');
-          }, 2000);
-          
-          console.log('✅ Response state: Textarea has green border (fades in quickly, out slowly), notification shown, button reset');
-          resolve();
-        });
-      },
-
-      // Test undo state
-      showUndo: () => {
-        console.log('🧪 Testing undo state...');
-        undoBoost();
-        console.log('✅ Undo state: Original text restored, green border removed, notification hidden');
-      },
-
-      // Reset everything
-      reset: () => {
-        console.log('🧪 Resetting everything...');
-        const textarea = document.getElementById('demoTextarea');
-        const boostBtn = document.getElementById('demoBoostBtn');
-        
-        // Stop any ongoing typing animation
-        if (window.currentTypeInterval) {
-          clearInterval(window.currentTypeInterval);
-          window.currentTypeInterval = null;
+            testBoostStates.showResponse(boosted);
+            showNotification(notification);
+          }, 1500);
         }
-        
-        textarea.value = '';
-        textarea.classList.remove('border-green-500');
-        boostBtn.style.display = 'none';
-        boostBtn.textContent = 'Boost';
-        boostBtn.disabled = false;
-        boostBtn.style.backgroundColor = '';
-        boostBtn.style.borderColor = '';
-        boostBtn.style.color = '';
-        boostBtn.style.border = '';
-        
-        hideNotification();
-        console.log('✅ Reset complete: Everything back to initial state');
-      }
-    };
+      });
 
-    console.log('🧪 Boost testing functions available:');
-    console.log('- testBoostStates.showTyping("your text") - Test typing state');
-    console.log('- testBoostStates.showBoosting() - Test boost button state');
-    console.log('- testBoostStates.showResponse("boosted text") - Test response state');
-    console.log('- testBoostStates.showUndo() - Test undo state');
-    console.log('- testBoostStates.reset() - Reset everything');
-
-    // Panel demo functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      // Intersection Observer for auto-triggering panel
-      const panelSection = document.querySelector('section:has(#openPanelBtn)');
-      if (panelSection) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
-              // Panel is mostly in view, trigger the button
-              const openPanelBtn = document.getElementById('openPanelBtn');
-              if (openPanelBtn && !openPanelBtn.dataset.autoTriggered) {
-                openPanelBtn.dataset.autoTriggered = 'true';
-                setTimeout(() => {
-                  openPanelBtn.click();
-                }, 1000); // Small delay for better UX
+      // Auto-run scenario 1 when demo booster comes into view
+      const demoBooster = document.getElementById("demoBooster");
+      if (demoBooster) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
+                // Demo booster is mostly in view, trigger scenario 1
+                if (!entry.target.dataset.scenarioTriggered) {
+                  entry.target.dataset.scenarioTriggered = "true";
+                  setTimeout(() => {
+                    runScenario(1);
+                  }, 500); // Small delay for better UX
+                }
               }
-            }
-          });
-        }, {
-          threshold: 0.8, // Trigger when 80% of the section is visible
-          rootMargin: '0px 0px -100px 0px' // Slight offset from bottom
-        });
-        
-        observer.observe(panelSection);
+            });
+          },
+          {
+            threshold: 0.8, // Trigger when 80% of the section is visible
+            rootMargin: "0px 0px -50px 0px", // Slight offset from bottom
+          }
+        );
+
+        observer.observe(demoBooster);
       }
-      const openPanelBtn = document.getElementById('openPanelBtn');
-      const closePanelBtn = document.getElementById('closePanelBtn');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-      const settingsBtn = document.getElementById('settingsBtn');
-      const panel = document.getElementById('mgmtBoostPanel');
-      const panelTabs = document.getElementById('panelTabs');
-      const modal = document.getElementById('featureModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalContent = document.getElementById('modalContent');
-      
-      // Feature content for each tab
-      const tabFeatures = {
-        dashboard: {
-          title: 'Dashboard Features',
-          features: [
-            { color: 'bg-green-500', title: 'Team Pulse', desc: 'Real-time sentiment tracking with color-coded status indicators' },
-            { color: 'bg-blue-500', title: 'Activity Timeline', desc: 'Recent 1:1s, feedback, and check-ins with timestamps' },
-            { color: 'bg-purple-500', title: 'Quick Actions', desc: 'Settings gear for customization and panel management' }
-          ]
+
+      // Show/hide boost button based on text input
+      document
+        .getElementById("demoTextarea")
+        ?.addEventListener("input", (e) => {
+          const boostBtn = document.getElementById("demoBoostBtn");
+          const hasText = e.target.value.trim().length > 0;
+
+          if (hasText) {
+            boostBtn.style.display = "block";
+            boostBtn.style.animation = "slideIn 0.3s ease-out";
+          } else {
+            boostBtn.style.display = "none";
+          }
+        });
+
+      // Console testing functions
+      window.testBoostStates = {
+        // Test typing state
+        showTyping: (text = "Test message") => {
+          console.log("🧪 Testing typing state...");
+          const textarea = document.getElementById("demoTextarea");
+          textarea.value = text;
+          textarea.dispatchEvent(new Event("input"));
+          console.log(
+            "✅ Typing state: Textarea has text, boost button should be visible"
+          );
         },
-        daily: {
-          title: 'Daily Log Features',
-          features: [
-            { color: 'bg-emerald-500', title: 'Auto-save', desc: 'Notes automatically save as you type, never lose your thoughts' },
-            { color: 'bg-blue-500', title: '1:1 Insights', desc: 'Track key discussion points and follow-up items from meetings' },
-            { color: 'bg-purple-500', title: 'Quick Observations', desc: 'Capture daily wins, concerns, and team dynamics' }
-          ]
+
+        // Test boost button click state
+        showBoosting: () => {
+          return new Promise((resolve) => {
+            console.log("🧪 Testing boost button state...");
+            const boostBtn = document.getElementById("demoBoostBtn");
+
+            if (!boostBtn) {
+              console.error("❌ Boost button not found!");
+              resolve();
+              return;
+            }
+
+            // Store original text
+            const textarea = document.getElementById("demoTextarea");
+            window.originalText = textarea.value;
+
+            // Show loading state with more explicit styling
+            boostBtn.textContent = "Boosting...";
+            boostBtn.disabled = true;
+
+            // Remove all existing classes and add inline styles
+            boostBtn.className = "px-3 py-1 rounded text-xs transition-colors";
+            boostBtn.style.backgroundColor = "transparent";
+            boostBtn.style.borderColor = "#52525b";
+            boostBtn.style.color = "#a1a1aa";
+            boostBtn.style.border = "1px solid #52525b";
+            boostBtn.style.cursor = "not-allowed";
+
+            console.log(
+              '✅ Boost button should now show "Boosting..." in gray'
+            );
+            console.log("Button text:", boostBtn.textContent);
+            console.log("Button styles:", {
+              backgroundColor: boostBtn.style.backgroundColor,
+              color: boostBtn.style.color,
+              border: boostBtn.style.border,
+            });
+
+            resolve();
+          });
         },
-        calendar: {
-          title: 'Calendar Features',
-          features: [
-            { color: 'bg-green-500', title: 'Meeting Prep', desc: 'Add prep flags and notes to existing calendar events' },
-            { color: 'bg-blue-500', title: 'Management Context', desc: 'Enhanced view with team context and meeting history' },
-            { color: 'bg-purple-500', title: 'Follow-up Tracking', desc: 'Track action items and follow-ups from meetings' }
-          ]
+
+        // Test boost response state
+        showResponse: (boostedText = "This is a boosted test message!") => {
+          return new Promise((resolve) => {
+            console.log("🧪 Testing boost response state...");
+            const boostBtn = document.getElementById("demoBoostBtn");
+            const textarea = document.getElementById("demoTextarea");
+
+            // Update textarea with boosted text
+            textarea.value = boostedText;
+
+            // Add transition for smooth border animation
+            textarea.style.transition = "border-color 0.3s ease-out";
+            textarea.classList.add("border-green-500");
+
+            // Show notification
+            showNotification("Tone: Test response");
+
+            // Reset button to normal state
+            boostBtn.textContent = "Boost";
+            boostBtn.disabled = false;
+            boostBtn.className =
+              "px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors";
+            boostBtn.style.backgroundColor = "";
+            boostBtn.style.borderColor = "";
+            boostBtn.style.color = "";
+            boostBtn.style.border = "";
+            boostBtn.style.cursor = "";
+
+            // Fade out border slowly after 2 seconds
+            setTimeout(() => {
+              textarea.style.transition = "border-color 1s ease-out";
+              textarea.classList.remove("border-green-500");
+            }, 2000);
+
+            console.log(
+              "✅ Response state: Textarea has green border (fades in quickly, out slowly), notification shown, button reset"
+            );
+            resolve();
+          });
         },
-        guide: {
-          title: 'Field Guide Features',
-          features: [
-            { color: 'bg-red-500', title: 'Conflict Resolution', desc: 'Step-by-step checklists for handling difficult situations' },
-            { color: 'bg-blue-500', title: 'Management Frameworks', desc: 'Proven methodologies and best practices' },
-            { color: 'bg-green-500', title: 'Searchable Knowledge', desc: 'Quick access to resources and guidance when you need it' }
-          ]
+
+        // Test undo state
+        showUndo: () => {
+          console.log("🧪 Testing undo state...");
+          undoBoost();
+          console.log(
+            "✅ Undo state: Original text restored, green border removed, notification hidden"
+          );
         },
-        settings: {
-          title: 'Settings Features',
-          features: [
-            { color: 'bg-blue-500', title: 'Profile Management', desc: 'Configure your manager name and team information' },
-            { color: 'bg-green-500', title: 'Team Configuration', desc: 'Set up team members and channels for monitoring' },
-            { color: 'bg-purple-500', title: 'API Integration', desc: 'Connect OpenAI API for intelligent message boosting' }
-          ]
-        }
+
+        // Reset everything
+        reset: () => {
+          console.log("🧪 Resetting everything...");
+          const textarea = document.getElementById("demoTextarea");
+          const boostBtn = document.getElementById("demoBoostBtn");
+
+          // Stop any ongoing typing animation
+          if (window.currentTypeInterval) {
+            clearInterval(window.currentTypeInterval);
+            window.currentTypeInterval = null;
+          }
+
+          textarea.value = "";
+          textarea.classList.remove("border-green-500");
+          boostBtn.style.display = "none";
+          boostBtn.textContent = "Boost";
+          boostBtn.disabled = false;
+          boostBtn.style.backgroundColor = "";
+          boostBtn.style.borderColor = "";
+          boostBtn.style.color = "";
+          boostBtn.style.border = "";
+
+          hideNotification();
+          console.log("✅ Reset complete: Everything back to initial state");
+        },
       };
-      
-      function showModal(tabName) {
-        const tab = tabFeatures[tabName];
-        if (tab && modalTitle && modalContent) {
-          modalTitle.textContent = tab.title;
-          modalContent.innerHTML = tab.features.map(feature => `
+
+      console.log("🧪 Boost testing functions available:");
+      console.log(
+        '- testBoostStates.showTyping("your text") - Test typing state'
+      );
+      console.log("- testBoostStates.showBoosting() - Test boost button state");
+      console.log(
+        '- testBoostStates.showResponse("boosted text") - Test response state'
+      );
+      console.log("- testBoostStates.showUndo() - Test undo state");
+      console.log("- testBoostStates.reset() - Reset everything");
+
+      // Panel demo functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        // Intersection Observer for auto-triggering panel
+        const panelSection = document.querySelector(
+          "section:has(#openPanelBtn)"
+        );
+        if (panelSection) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
+                  // Panel is mostly in view, trigger the button
+                  const openPanelBtn = document.getElementById("openPanelBtn");
+                  if (openPanelBtn && !openPanelBtn.dataset.autoTriggered) {
+                    openPanelBtn.dataset.autoTriggered = "true";
+                    setTimeout(() => {
+                      openPanelBtn.click();
+                    }, 1000); // Small delay for better UX
+                  }
+                }
+              });
+            },
+            {
+              threshold: 0.8, // Trigger when 80% of the section is visible
+              rootMargin: "0px 0px -100px 0px", // Slight offset from bottom
+            }
+          );
+
+          observer.observe(panelSection);
+        }
+        const openPanelBtn = document.getElementById("openPanelBtn");
+        const closePanelBtn = document.getElementById("closePanelBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const settingsBtn = document.getElementById("settingsBtn");
+        const panel = document.getElementById("mgmtBoostPanel");
+        const panelTabs = document.getElementById("panelTabs");
+        const modal = document.getElementById("featureModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalContent = document.getElementById("modalContent");
+
+        // Feature content for each tab
+        const tabFeatures = {
+          dashboard: {
+            title: "Dashboard Features",
+            features: [
+              {
+                color: "bg-green-500",
+                title: "Team Pulse",
+                desc: "Real-time sentiment tracking with color-coded status indicators",
+              },
+              {
+                color: "bg-blue-500",
+                title: "Activity Timeline",
+                desc: "Recent 1:1s, feedback, and check-ins with timestamps",
+              },
+              {
+                color: "bg-purple-500",
+                title: "Quick Actions",
+                desc: "Settings gear for customization and panel management",
+              },
+            ],
+          },
+          daily: {
+            title: "Daily Log Features",
+            features: [
+              {
+                color: "bg-emerald-500",
+                title: "Auto-save",
+                desc: "Notes automatically save as you type, never lose your thoughts",
+              },
+              {
+                color: "bg-blue-500",
+                title: "1:1 Insights",
+                desc: "Track key discussion points and follow-up items from meetings",
+              },
+              {
+                color: "bg-purple-500",
+                title: "Quick Observations",
+                desc: "Capture daily wins, concerns, and team dynamics",
+              },
+            ],
+          },
+          calendar: {
+            title: "Calendar Features",
+            features: [
+              {
+                color: "bg-green-500",
+                title: "Meeting Prep",
+                desc: "Add prep flags and notes to existing calendar events",
+              },
+              {
+                color: "bg-blue-500",
+                title: "Management Context",
+                desc: "Enhanced view with team context and meeting history",
+              },
+              {
+                color: "bg-purple-500",
+                title: "Follow-up Tracking",
+                desc: "Track action items and follow-ups from meetings",
+              },
+            ],
+          },
+          guide: {
+            title: "Field Guide Features",
+            features: [
+              {
+                color: "bg-red-500",
+                title: "Conflict Resolution",
+                desc: "Step-by-step checklists for handling difficult situations",
+              },
+              {
+                color: "bg-blue-500",
+                title: "Management Frameworks",
+                desc: "Proven methodologies and best practices",
+              },
+              {
+                color: "bg-green-500",
+                title: "Searchable Knowledge",
+                desc: "Quick access to resources and guidance when you need it",
+              },
+            ],
+          },
+          settings: {
+            title: "Settings Features",
+            features: [
+              {
+                color: "bg-blue-500",
+                title: "Profile Management",
+                desc: "Configure your manager name and team information",
+              },
+              {
+                color: "bg-green-500",
+                title: "Team Configuration",
+                desc: "Set up team members and channels for monitoring",
+              },
+              {
+                color: "bg-purple-500",
+                title: "API Integration",
+                desc: "Connect OpenAI API for intelligent message boosting",
+              },
+            ],
+          },
+        };
+
+        function showModal(tabName) {
+          const tab = tabFeatures[tabName];
+          if (tab && modalTitle && modalContent) {
+            modalTitle.textContent = tab.title;
+            modalContent.innerHTML = tab.features
+              .map(
+                (feature) => `
             <div class="flex items-start gap-3">
               <div class="w-2 h-2 ${feature.color} rounded-full mt-1.5 flex-shrink-0"></div>
               <div class="flex-1">
@@ -1100,177 +1714,239 @@
                 <div class="text-zinc-600">${feature.desc}</div>
               </div>
             </div>
-          `).join('');
-          
-          modal.classList.remove('-translate-x-full');
-          modal.classList.add('translate-x-0');
-        }
-      }
-      
-      function hideModal() {
-        modal.classList.remove('translate-x-0');
-        modal.classList.add('-translate-x-full');
-      }
-      
+          `
+              )
+              .join("");
 
-      
-      if (openPanelBtn && closePanelBtn && panel && modal) {
-        openPanelBtn.addEventListener('click', () => {
-          // Open panel
-          panel.classList.remove('translate-x-full');
-          panel.classList.add('translate-x-0');
-          
-          // Show dashboard features modal after panel opens
-          setTimeout(() => {
-            showModal('dashboard');
-          }, 600);
-        });
-        
-        closePanelBtn.addEventListener('click', () => {
-          // Hide modal first
-          hideModal();
-          
-          // Close panel
-          setTimeout(() => {
-            panel.classList.remove('translate-x-0');
-            panel.classList.add('translate-x-full');
-          }, 300);
-        });
-        
-        closeModalBtn.addEventListener('click', hideModal);
-        
-        // Settings button functionality
-        if (settingsBtn) {
-          settingsBtn.addEventListener('click', () => {
-            const settingsSection = document.getElementById('settings-content');
-            const isSettingsOpen = settingsSection && !settingsSection.classList.contains('hidden');
-            
-            if (isSettingsOpen) {
-              // Close settings and return to dashboard
-              settingsSection.classList.add('hidden');
-              panelTabs.classList.remove('hidden');
-              
-              // Show dashboard content
-              const dashboardSection = document.getElementById('dashboard-content');
-              if (dashboardSection) dashboardSection.classList.remove('hidden');
-              
-              // Update tab styling to show dashboard as active
-              const tabButtons = panel.querySelectorAll('[data-tab]');
-              tabButtons.forEach(btn => {
-                btn.classList.remove('bg-zinc-100', 'border-b-2', 'border-zinc-300', 'text-zinc-900');
-                btn.classList.add('text-zinc-600', 'hover:text-zinc-900', 'hover:bg-zinc-50');
-              });
-              const dashboardTab = panel.querySelector('[data-tab="dashboard"]');
-              if (dashboardTab) {
-                dashboardTab.classList.remove('text-zinc-600', 'hover:text-zinc-900', 'hover:bg-zinc-50');
-                dashboardTab.classList.add('bg-zinc-100', 'border-b-2', 'border-zinc-300', 'text-zinc-900');
+            modal.classList.remove("-translate-x-full");
+            modal.classList.add("translate-x-0");
+          }
+        }
+
+        function hideModal() {
+          modal.classList.remove("translate-x-0");
+          modal.classList.add("-translate-x-full");
+        }
+
+        if (openPanelBtn && closePanelBtn && panel && modal) {
+          openPanelBtn.addEventListener("click", () => {
+            // Open panel
+            panel.classList.remove("translate-x-full");
+            panel.classList.add("translate-x-0");
+
+            // Show dashboard features modal after panel opens
+            setTimeout(() => {
+              showModal("dashboard");
+            }, 600);
+          });
+
+          closePanelBtn.addEventListener("click", () => {
+            // Hide modal first
+            hideModal();
+
+            // Close panel
+            setTimeout(() => {
+              panel.classList.remove("translate-x-0");
+              panel.classList.add("translate-x-full");
+            }, 300);
+          });
+
+          closeModalBtn.addEventListener("click", hideModal);
+
+          // Settings button functionality
+          if (settingsBtn) {
+            settingsBtn.addEventListener("click", () => {
+              const settingsSection =
+                document.getElementById("settings-content");
+              const isSettingsOpen =
+                settingsSection &&
+                !settingsSection.classList.contains("hidden");
+
+              if (isSettingsOpen) {
+                // Close settings and return to dashboard
+                settingsSection.classList.add("hidden");
+                panelTabs.classList.remove("hidden");
+
+                // Show dashboard content
+                const dashboardSection =
+                  document.getElementById("dashboard-content");
+                if (dashboardSection)
+                  dashboardSection.classList.remove("hidden");
+
+                // Update tab styling to show dashboard as active
+                const tabButtons = panel.querySelectorAll("[data-tab]");
+                tabButtons.forEach((btn) => {
+                  btn.classList.remove(
+                    "bg-zinc-100",
+                    "border-b-2",
+                    "border-zinc-300",
+                    "text-zinc-900"
+                  );
+                  btn.classList.add(
+                    "text-zinc-600",
+                    "hover:text-zinc-900",
+                    "hover:bg-zinc-50"
+                  );
+                });
+                const dashboardTab = panel.querySelector(
+                  '[data-tab="dashboard"]'
+                );
+                if (dashboardTab) {
+                  dashboardTab.classList.remove(
+                    "text-zinc-600",
+                    "hover:text-zinc-900",
+                    "hover:bg-zinc-50"
+                  );
+                  dashboardTab.classList.add(
+                    "bg-zinc-100",
+                    "border-b-2",
+                    "border-zinc-300",
+                    "text-zinc-900"
+                  );
+                }
+
+                // Show dashboard features modal
+                showModal("dashboard");
+              } else {
+                // Open settings
+                panelTabs.classList.add("hidden");
+
+                // Hide all content sections
+                const contentSections = [
+                  "dashboard-content",
+                  "daily-content",
+                  "calendar-content",
+                  "guide-content",
+                ];
+                contentSections.forEach((sectionId) => {
+                  const section = document.getElementById(sectionId);
+                  if (section) section.classList.add("hidden");
+                });
+
+                // Show settings content
+                if (settingsSection) settingsSection.classList.remove("hidden");
+
+                // Hide feature modal
+                hideModal();
               }
-              
-              // Show dashboard features modal
-              showModal('dashboard');
-            } else {
-              // Open settings
-              panelTabs.classList.add('hidden');
-              
-              // Hide all content sections
-              const contentSections = ['dashboard-content', 'daily-content', 'calendar-content', 'guide-content'];
-              contentSections.forEach(sectionId => {
-                const section = document.getElementById(sectionId);
-                if (section) section.classList.add('hidden');
+            });
+          }
+
+          // Prompt overrides collapsible functionality
+          const promptOverridesBtn =
+            document.getElementById("promptOverridesBtn");
+          const promptOverridesContent = document.getElementById(
+            "promptOverridesContent"
+          );
+          const promptArrow = document.getElementById("promptArrow");
+
+          if (promptOverridesBtn && promptOverridesContent && promptArrow) {
+            promptOverridesBtn.addEventListener("click", () => {
+              const isHidden =
+                promptOverridesContent.classList.contains("hidden");
+
+              if (isHidden) {
+                // Expand
+                promptOverridesContent.classList.remove("hidden");
+                promptArrow.classList.add("rotate-90");
+              } else {
+                // Collapse
+                promptOverridesContent.classList.add("hidden");
+                promptArrow.classList.remove("rotate-90");
+              }
+            });
+          }
+
+          // Add tab click handlers
+          const tabButtons = panel.querySelectorAll("[data-tab]");
+          tabButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              const tabName = button.getAttribute("data-tab");
+
+              // Show tabs
+              panelTabs.classList.remove("hidden");
+
+              // Update tab styling
+              tabButtons.forEach((btn) => {
+                btn.classList.remove(
+                  "bg-zinc-100",
+                  "border-b-2",
+                  "border-zinc-300",
+                  "text-zinc-900"
+                );
+                btn.classList.add(
+                  "text-zinc-600",
+                  "hover:text-zinc-900",
+                  "hover:bg-zinc-50"
+                );
               });
-              
-              // Show settings content
-              if (settingsSection) settingsSection.classList.remove('hidden');
-              
-              // Hide feature modal
-              hideModal();
-            }
+              button.classList.remove(
+                "text-zinc-600",
+                "hover:text-zinc-900",
+                "hover:bg-zinc-50"
+              );
+              button.classList.add(
+                "bg-zinc-100",
+                "border-b-2",
+                "border-zinc-300",
+                "text-zinc-900"
+              );
+
+              // Hide all content sections
+              const contentSections = [
+                "dashboard-content",
+                "daily-content",
+                "calendar-content",
+                "guide-content",
+                "settings-content",
+              ];
+              contentSections.forEach((sectionId) => {
+                const section = document.getElementById(sectionId);
+                if (section) section.classList.add("hidden");
+              });
+
+              // Show selected content section
+              const selectedSection = document.getElementById(
+                `${tabName}-content`
+              );
+              if (selectedSection) selectedSection.classList.remove("hidden");
+
+              // Show features for selected tab
+              showModal(tabName);
+            });
           });
         }
-        
-        // Prompt overrides collapsible functionality
-        const promptOverridesBtn = document.getElementById('promptOverridesBtn');
-        const promptOverridesContent = document.getElementById('promptOverridesContent');
-        const promptArrow = document.getElementById('promptArrow');
-        
-        if (promptOverridesBtn && promptOverridesContent && promptArrow) {
-          promptOverridesBtn.addEventListener('click', () => {
-            const isHidden = promptOverridesContent.classList.contains('hidden');
-            
-            if (isHidden) {
-              // Expand
-              promptOverridesContent.classList.remove('hidden');
-              promptArrow.classList.add('rotate-90');
-            } else {
-              // Collapse
-              promptOverridesContent.classList.add('hidden');
-              promptArrow.classList.remove('rotate-90');
-            }
-          });
-        }
-        
-        // Add tab click handlers
-        const tabButtons = panel.querySelectorAll('[data-tab]');
-        tabButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            const tabName = button.getAttribute('data-tab');
-            
-            // Show tabs
-            panelTabs.classList.remove('hidden');
-            
-            // Update tab styling
-            tabButtons.forEach(btn => {
-              btn.classList.remove('bg-zinc-100', 'border-b-2', 'border-zinc-300', 'text-zinc-900');
-              btn.classList.add('text-zinc-600', 'hover:text-zinc-900', 'hover:bg-zinc-50');
-            });
-            button.classList.remove('text-zinc-600', 'hover:text-zinc-900', 'hover:bg-zinc-50');
-            button.classList.add('bg-zinc-100', 'border-b-2', 'border-zinc-300', 'text-zinc-900');
-            
-            // Hide all content sections
-            const contentSections = ['dashboard-content', 'daily-content', 'calendar-content', 'guide-content', 'settings-content'];
-            contentSections.forEach(sectionId => {
-              const section = document.getElementById(sectionId);
-              if (section) section.classList.add('hidden');
-            });
-            
-            // Show selected content section
-            const selectedSection = document.getElementById(`${tabName}-content`);
-            if (selectedSection) selectedSection.classList.remove('hidden');
-            
-            // Show features for selected tab
-            showModal(tabName);
-          });
-        });
-      }
-    });
-  </script>
-
-  <!-- Inline success handling for Formspree -->
- <script>
-  const form = document.getElementById('waitlistForm');
-  const msg = document.getElementById('formMsg');
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
       });
-      if (res.ok) {
-        form.reset();
-        msg.textContent = "You're on the list 🎉 We'll email you when the private alpha opens.";
-        msg.className = "mt-3 text-sm text-emerald-400";
-      } else {
-        msg.textContent = "Hmm, something went wrong. Try again or email hi@mgmtboost.com.";
-        msg.className = "mt-3 text-sm text-rose-400";
-      }
-    } catch {
-      msg.textContent = "Network error. Please try again.";
-      msg.className = "mt-3 text-sm text-rose-400";
-    }
-  });
-</script>
-</body>
+    </script>
+
+    <!-- Inline success handling for Formspree -->
+    <script>
+      const form = document.getElementById("waitlistForm");
+      const msg = document.getElementById("formMsg");
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { Accept: "application/json" },
+          });
+          if (res.ok) {
+            form.reset();
+            msg.textContent =
+              "You're on the list 🎉 We'll email you when the private alpha opens.";
+            msg.className = "mt-3 text-sm text-emerald-400";
+          } else {
+            msg.textContent =
+              "Hmm, something went wrong. Try again or email hi@mgmtboost.com.";
+            msg.className = "mt-3 text-sm text-rose-400";
+          }
+        } catch {
+          msg.textContent = "Network error. Please try again.";
+          msg.className = "mt-3 text-sm text-rose-400";
+        }
+      });
+    </script>
+  </body>
 </html>
