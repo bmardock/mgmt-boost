@@ -141,7 +141,7 @@
                 </div>
                 
                 <!-- Main textarea -->
-                <textarea id="demoTextarea" class="w-full h-16 bg-transparent border border-transparent px-3 py-2 text-zinc-100 resize-none focus:outline-none"
+                <textarea id="demoTextarea" class="w-full h-20 md:h-16 bg-transparent border border-transparent px-3 py-2 text-zinc-100 resize-none focus:outline-none text-sm md:text-base"
                   placeholder="Message Brandon"></textarea>
                 
                 <!-- Bottom toolbar with action buttons -->
@@ -166,7 +166,7 @@
 
             <!-- Notification bar - always present to prevent layout shifts -->
             <div id="demoNotification" class="bg-zinc-800 border border-zinc-700 rounded-lg p-2 h-8 flex items-center justify-between opacity-0 pointer-events-none transition-opacity duration-300">
-              <span id="notificationText" class="text-xs text-zinc-300"></span>
+              <span id="notificationText" class="text-xs text-zinc-300 leading-tight"></span>
               <div class="flex items-center gap-3">
                 <button onclick="undoBoost()" class="text-emerald-400 hover:text-emerald-300 text-xs underline">Undo</button>
                 <button onclick="hideNotification()" class="text-zinc-400 hover:text-zinc-200 text-xs">×</button>
@@ -571,61 +571,61 @@
         topic: "Urgency",
         text: "Fix this ASAP!",
         boosted: "Could you please address this issue as soon as possible?",
-        notification: "Message boosted! Tone: Professional and clear"
+        notification: "Tone: Professional and clear"
       },
       2: {
         topic: "Feedback",
         text: "This is completely wrong. Do it again.",
         boosted: "I noticed some issues with this. Could you please review and make the necessary adjustments?",
-        notification: "Message boosted! Tone: Constructive and collaborative"
+        notification: "Tone: Constructive and collaborative"
       },
       3: {
         topic: "Timeline",
         text: "Why is this taking so long?",
         boosted: "I'm wondering about the timeline for this. Could you give me an update on the progress?",
-        notification: "Message boosted! Tone: Curious and supportive"
+        notification: "Tone: Curious and supportive"
       },
       4: {
         topic: "Requests",
         text: "Can you review this PR?",
         boosted: "Could you please review this PR by tomorrow morning?",
-        notification: "Message boosted! Tone: Clear with timeframe"
+        notification: "Tone: Clear with timeframe"
       },
       5: {
         topic: "Strategy",
         text: "I think we should maybe try another approach. The current plan is risky and may cause scaling issues, so I'd propose we...",
         boosted: "We may hit scaling issues with this plan — let's consider another approach.",
-        notification: "Message boosted! Tone: Concise and actionable"
+        notification: "Tone: Concise and actionable"
       },
       6: {
         topic: "Celebration",
         text: "Release shipped.",
         boosted: "Release shipped 🎉 Great work everyone!",
-        notification: "Message boosted! Tone: Celebratory and motivating"
+        notification: "Tone: Celebratory and motivating"
       },
       7: {
         topic: "De-escalation",
         text: "Stop spamming the channel, just file the ticket!!",
         boosted: "Let's keep the channel focused — can you file a ticket so we can track this properly? Thanks.",
-        notification: "Message boosted! Tone: De-escalated and constructive"
+        notification: "Tone: De-escalated and constructive"
       },
       8: {
         topic: "Deadlines",
         text: "This deadline is non-negotiable.",
         boosted: "This deadline is important for our project timeline. Can we discuss any blockers?",
-        notification: "Message boosted! Tone: Firm but collaborative"
+        notification: "Tone: Firm but collaborative"
       },
       9: {
         topic: "Status Updates",
         text: "What's the status on this?",
         boosted: "Could you give me a quick update on the current status of this project?",
-        notification: "Message boosted! Tone: Professional and specific"
+        notification: "Tone: Professional and specific"
       },
       10: {
         topic: "Performance",
         text: "This is unacceptable.",
         boosted: "I'm concerned about this outcome. Let's discuss what happened and how we can improve.",
-        notification: "Message boosted! Tone: Constructive and solution-focused"
+        notification: "Tone: Constructive and solution-focused"
       }
     };
 
@@ -825,29 +825,29 @@
         
         // Enhanced boost logic for demo
         let boosted = text;
-        let notification = 'Message boosted! Tone: Neutral';
+        let notification = 'Tone: Neutral';
         
         if (text.toLowerCase().includes('asap') || text.toLowerCase().includes('urgent')) {
           boosted = text.replace(/asap/gi, 'as soon as possible').replace(/urgent/gi, 'priority');
-          notification = 'Message boosted! Tone: Professional and clear';
+          notification = 'Tone: Professional and clear';
         } else if (text.toLowerCase().includes('wrong') || text.toLowerCase().includes('bad') || text.toLowerCase().includes('unacceptable')) {
           boosted = text.replace(/wrong/gi, 'needs adjustment').replace(/bad/gi, 'could be improved').replace(/unacceptable/gi, 'concerning');
-          notification = 'Message boosted! Tone: Constructive and helpful';
+          notification = 'Tone: Constructive and helpful';
         } else if (text.toLowerCase().includes('review') && !text.toLowerCase().includes('by')) {
           boosted = text + ' by tomorrow morning?';
-          notification = 'Message boosted! Tone: Clear with timeframe';
+          notification = 'Tone: Clear with timeframe';
         } else if (text.toLowerCase().includes('shipped') || text.toLowerCase().includes('released')) {
           boosted = text + ' 🎉 Great work everyone!';
-          notification = 'Message boosted! Tone: Celebratory and motivating';
+          notification = 'Tone: Celebratory and motivating';
         } else if (text.toLowerCase().includes('stop') || text.toLowerCase().includes('spamming')) {
           boosted = text.replace(/stop spamming/gi, 'let\'s keep the channel focused').replace(/just file/gi, 'can you file');
-          notification = 'Message boosted! Tone: De-escalated and constructive';
+          notification = 'Tone: De-escalated and constructive';
         } else if (text.toLowerCase().includes('non-negotiable')) {
           boosted = text.replace(/non-negotiable/gi, 'important for our project timeline. Can we discuss any blockers?');
-          notification = 'Message boosted! Tone: Firm but collaborative';
+          notification = 'Tone: Firm but collaborative';
         } else if (text.toLowerCase().includes('status')) {
           boosted = text.replace(/what's the status/gi, 'could you give me a quick update on the current status');
-          notification = 'Message boosted! Tone: Professional and specific';
+          notification = 'Tone: Professional and specific';
         }
         
         // Use the same testing methods for consistency
@@ -945,7 +945,7 @@
           textarea.classList.add('border-green-500');
           
           // Show notification
-          showNotification('Message boosted! Tone: Test response');
+          showNotification('Tone: Test response');
           
           // Reset button to normal state
           boostBtn.textContent = 'Boost';
