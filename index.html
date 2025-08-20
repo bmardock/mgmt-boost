@@ -75,6 +75,15 @@
         box-shadow: 0 0 0 1px #007a5a;
       }
 
+      /* Boost button transitions */
+      .boost-btn {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .boost-btn:disabled {
+        transition: all 0.2s ease-in-out;
+      }
+
       /* Animated gradient for superpower text */
       .superpower-gradient {
         background: linear-gradient(
@@ -258,7 +267,7 @@
                   <textarea
                     id="demoTextarea"
                     class="w-full h-20 md:h-16 bg-transparent border border-transparent px-3 py-2 text-zinc-100 resize-none focus:outline-none text-sm md:text-base"
-                    placeholder="Message Brandon"
+                    placeholder="Message Channel"
                   ></textarea>
 
                   <!-- Bottom toolbar with action buttons -->
@@ -284,7 +293,7 @@
                     <div class="flex items-center gap-1">
                       <button
                         id="demoBoostBtn"
-                        class="px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                        class="boost-btn px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700"
                       >
                         Boost
                       </button>
@@ -527,7 +536,7 @@
                       <button class="text-zinc-400 hover:text-zinc-200">
                         @
                       </button>
-                      <span class="text-zinc-500 text-sm">Message Brandon</span>
+                      <span class="text-zinc-500 text-sm">Message Channel</span>
                     </div>
                     <div class="flex items-center gap-2">
                       <button
@@ -1106,19 +1115,38 @@
       };
 
       let currentScenario = 0;
+      let currentScenarioController = null; // AbortController for current scenario
 
-      // Helper function for delays
-      function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+      // Helper function for delays with cancellation support
+      function delay(ms, signal) {
+        return new Promise((resolve, reject) => {
+          const timeoutId = setTimeout(resolve, ms);
+
+          if (signal) {
+            signal.addEventListener("abort", () => {
+              clearTimeout(timeoutId);
+              reject(new Error("Cancelled"));
+            });
+          }
+        });
       }
 
       async function runScenario(scenarioNum) {
+        // Cancel any currently running scenario
+        if (currentScenarioController) {
+          currentScenarioController.abort();
+          console.log("🛑 Cancelled previous scenario");
+        }
+
+        // Create new AbortController for this scenario
+        currentScenarioController = new AbortController();
+        const signal = currentScenarioController.signal;
+
         currentScenario = scenarioNum;
         const scenario = scenarios[scenarioNum];
 
-        // Reset UI
-        hideNotification();
-        hideBoostedMessage();
+        // Reset demo state first
+        testBoostStates.reset();
 
         // Update active scenario button
         updateActiveScenarioButton(scenarioNum);
@@ -1132,15 +1160,15 @@
         try {
           // Step 1: Type the scenario text
           console.log("📝 Starting to type scenario text...");
-          await typeText(scenario.text);
-          await delay(500);
+          await typeText(scenario.text, signal);
+          await delay(500, signal);
           // Step 2: Show boosting state
           console.log("🚀 Starting boost process...");
           await testBoostStates.showBoosting();
-          await delay(500);
+          await delay(500, signal);
           // Step 3: Wait for API simulation (1.5 seconds)
           console.log("⏳ Simulating API delay...");
-          await delay(1500);
+          await delay(1500, signal);
 
           // Step 4: Show response
           console.log("✅ Showing boost response...");
@@ -1149,7 +1177,19 @@
 
           console.log("🎉 Scenario complete!");
         } catch (error) {
-          console.error("❌ Error in scenario:", error);
+          if (error.message === "Cancelled") {
+            console.log("🛑 Scenario was cancelled");
+          } else {
+            console.error("❌ Error in scenario:", error);
+          }
+        } finally {
+          // Clear the controller if this scenario completed (not cancelled)
+          if (
+            currentScenarioController &&
+            !currentScenarioController.signal.aborted
+          ) {
+            currentScenarioController = null;
+          }
         }
       }
 
@@ -1170,8 +1210,8 @@
         }
       }
 
-      function typeText(text) {
-        return new Promise((resolve) => {
+      function typeText(text, signal) {
+        return new Promise((resolve, reject) => {
           const textarea = document.getElementById("demoTextarea");
           textarea.value = "";
 
@@ -1182,6 +1222,14 @@
 
           let i = 0;
           window.currentTypeInterval = setInterval(() => {
+            // Check if cancelled
+            if (signal && signal.aborted) {
+              clearInterval(window.currentTypeInterval);
+              window.currentTypeInterval = null;
+              reject(new Error("Cancelled"));
+              return;
+            }
+
             textarea.value += text.charAt(i);
             i++;
             if (i >= text.length) {
@@ -1281,12 +1329,8 @@
         const boostBtn = document.getElementById("demoBoostBtn");
         boostBtn.textContent = "Boost";
         boostBtn.disabled = false;
-        boostBtn.classList.remove(
-          "bg-transparent",
-          "border-zinc-600",
-          "text-zinc-400"
-        );
-        boostBtn.classList.add("bg-emerald-600", "hover:bg-emerald-700");
+        boostBtn.className =
+          "boost-btn px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700";
       }
 
       // Manual boost button - use event delegation to ensure it works
@@ -1442,12 +1486,12 @@
             const textarea = document.getElementById("demoTextarea");
             window.originalText = textarea.value;
 
-            // Show loading state with more explicit styling
+            // Show loading state with smooth transitions
             boostBtn.textContent = "Boosting...";
             boostBtn.disabled = true;
 
-            // Remove all existing classes and add inline styles
-            boostBtn.className = "px-3 py-1 rounded text-xs transition-colors";
+            // Update classes for smooth transition
+            boostBtn.className = "boost-btn px-3 py-1 rounded text-xs";
             boostBtn.style.backgroundColor = "transparent";
             boostBtn.style.borderColor = "#52525b";
             boostBtn.style.color = "#a1a1aa";
@@ -1485,11 +1529,11 @@
             // Show notification
             showNotification("Tone: Test response");
 
-            // Reset button to normal state
+            // Reset button to normal state with smooth transitions
             boostBtn.textContent = "Boost";
             boostBtn.disabled = false;
             boostBtn.className =
-              "px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 transition-colors";
+              "boost-btn px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700 border-green-600";
             boostBtn.style.backgroundColor = "";
             boostBtn.style.borderColor = "";
             boostBtn.style.color = "";
@@ -1532,9 +1576,10 @@
 
           textarea.value = "";
           textarea.classList.remove("border-green-500");
-          boostBtn.style.display = "none";
           boostBtn.textContent = "Boost";
           boostBtn.disabled = false;
+          boostBtn.className =
+            "boost-btn px-3 py-1 rounded text-xs bg-emerald-600 text-white hover:bg-emerald-700";
           boostBtn.style.backgroundColor = "";
           boostBtn.style.borderColor = "";
           boostBtn.style.color = "";
