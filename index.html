@@ -654,6 +654,7 @@
                       class="p-2 rounded hover:bg-zinc-200 transition-colors"
                     >
                       <svg
+                        id="settingsIcon"
                         class="w-4 h-4"
                         fill="none"
                         stroke="currentColor"
@@ -1810,18 +1811,18 @@
             features: [
               {
                 color: "bg-blue-500",
-                title: "Profile Management",
-                desc: "Configure your manager name and team information",
+                title: "Context-Aware",
+                desc: "Define your team, manager, and channels so insights reflect your real org structure.",
               },
               {
                 color: "bg-green-500",
-                title: "Team Configuration",
-                desc: "Set up team members and channels for monitoring",
+                title: "Private by Design",
+                desc: "Use your own API key. Nothing stored, nothing shared.",
               },
               {
                 color: "bg-purple-500",
-                title: "API Integration",
-                desc: "Connect OpenAI API for intelligent message boosting",
+                title: "Personalized Flow",
+                desc: "Customize prompts and connect Drive + Calendar to fit your style and workflow.",
               },
             ],
           },
@@ -1885,6 +1886,7 @@
             settingsBtn.addEventListener("click", () => {
               const settingsSection =
                 document.getElementById("settings-content");
+              const settingsIcon = document.getElementById("settingsIcon");
               const isSettingsOpen =
                 settingsSection &&
                 !settingsSection.classList.contains("hidden");
@@ -1893,6 +1895,11 @@
                 // Close settings and return to dashboard
                 settingsSection.classList.add("hidden");
                 panelTabs.classList.remove("hidden");
+
+                // Make gear icon outline
+                if (settingsIcon) {
+                  settingsIcon.setAttribute("fill", "none");
+                }
 
                 // Show dashboard content
                 const dashboardSection =
@@ -1938,6 +1945,11 @@
                 // Open settings
                 panelTabs.classList.add("hidden");
 
+                // Make gear icon solid
+                if (settingsIcon) {
+                  settingsIcon.setAttribute("fill", "currentColor");
+                }
+
                 // Hide all content sections
                 const contentSections = [
                   "dashboard-content",
@@ -1953,8 +1965,10 @@
                 // Show settings content
                 if (settingsSection) settingsSection.classList.remove("hidden");
 
-                // Hide feature modal
-                hideModal();
+                // Show settings features modal
+                setTimeout(() => {
+                  showModal("settings");
+                }, 100);
               }
             });
           }
