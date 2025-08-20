@@ -283,8 +283,8 @@ function createCalendarTemplate(calendarEvents, today) {
     const date = new Date(event.start).toLocaleDateString();
     
     const compactClass = isCompact ? 'mb-meeting-compact' : '';
-    
-    return `
+
+  return `
       <div class="mb-meeting ${compactClass}">
         <div class="mb-meeting-header">
           <div class="mb-meeting-time">${date} at ${startTime}</div>
@@ -296,7 +296,7 @@ function createCalendarTemplate(calendarEvents, today) {
           <button class="mb-meeting-btn" data-event-id="${eventId}">
             ${meetingData.notes ? 'Show Notes' : 'Add Notes'}
           </button>
-        </div>
+    </div>
       </div>
     `;
   };
@@ -339,7 +339,7 @@ function createCalendarTemplate(calendarEvents, today) {
           <div class="mb-day-content">
             ${tomorrowEvents.map(event => createMeetingHtml(event, true)).join('')}
           </div>
-        </div>
+      </div>
       ` : ''}
     </div>
   `;
@@ -1011,8 +1011,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#mb-settings-toggle").classList.remove("active");
       } else {
         // Normal tab switching
-        tabs.forEach((t) => t.classList.remove("active"));
-        tab.classList.add("active");
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
         currentTab = tab.dataset.tab;
         renderTab(body, currentTab);
       }
