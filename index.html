@@ -21,7 +21,84 @@
       content="https://bmardock.github.io/mgmt-boost/assets/og.png"
     />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="mgmt-boost — Your leadership superpower"
+    />
+    <meta
+      name="twitter:description"
+      content="Slack-first manager augmentation: boosters, diary to Drive, team pulse, nudges."
+    />
+    <meta
+      name="twitter:image"
+      content="https://bmardock.github.io/mgmt-boost/assets/og.png"
+    />
+    <meta name="twitter:creator" content="@mgmtboost" />
+
+    <!-- Additional social sharing meta tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mgmtboost.com" />
+    <meta property="og:site_name" content="mgmt-boost" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- LinkedIn specific -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="mgmt-boost - Slack-first management augmentation toolkit"
+    />
+
+    <!-- Favicon and app icons -->
     <link rel="icon" href="data:," />
+    <link
+      rel="apple-touch-icon"
+      href="https://bmardock.github.io/mgmt-boost/assets/apple-touch-icon.png"
+    />
+    <link
+      rel="manifest"
+      href="https://bmardock.github.io/mgmt-boost/manifest.json"
+    />
+
+    <!-- Additional SEO meta tags -->
+    <meta
+      name="keywords"
+      content="management, slack, productivity, team leadership, communication, AI, workplace tools, manager tools"
+    />
+    <meta name="author" content="mgmt-boost" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://mgmtboost.com" />
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "mgmt-boost",
+        "description": "Slack-first management augmentation toolkit: boost messages, keep quick 1:1 & meeting notes to Google Drive, track team pulse, and get helpful nudges—without another tool.",
+        "url": "https://mgmtboost.com",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "creator": {
+          "@type": "Organization",
+          "name": "mgmt-boost"
+        },
+        "featureList": [
+          "Message Booster",
+          "Manager Journal",
+          "Team Signals & Nudges",
+          "Slack Integration",
+          "Google Drive Integration"
+        ]
+      }
+    </script>
+
     <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -431,7 +508,7 @@
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
           <h3 class="font-semibold text-lg">Team Signals & Nudges</h3>
           <p class="mt-2 text-zinc-300">
-            Stay proactive with timely prompts — check in when it’s quiet,
+            Stay proactive with timely prompts to check in when it’s quiet,
             celebrate after a release, and support teammates who need it.
           </p>
         </div>
@@ -999,20 +1076,27 @@
       <!-- FAQ -->
       <section class="mt-16">
         <h3 class="text-center font-semibold text-lg">FAQ</h3>
-        <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div class="mt-6 grid md:grid-cols-3 gap-6">
           <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <div class="font-semibold">Is my data safe?</div>
+            <div class="font-semibold">Data Safety</div>
             <p class="mt-2 text-zinc-300">
-              Yes. Your data stays with you. All processing happens in your
-              browser, using your API key. Notes live in your Google Drive, and
-              your calendar access never leaves your device.
+              Yes. All processing stays in your browser with your API key, and
+              notes live in your Google Drive. Calendar access never leaves your
+              device.
             </p>
           </div>
           <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <div class="font-semibold">Does this replace my tools?</div>
+            <div class="font-semibold">Not another tool!</div>
             <p class="mt-2 text-zinc-300">
-              No. It works where you already are — Slack, Drive, and Calendar.
-              No extra dashboards to manage.
+              Mgmt-boost works inside Slack, Drive, and Calendar so you stay
+              organized without extra dashboards.
+            </p>
+          </div>
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+            <div class="font-semibold">Personalized Tone</div>
+            <p class="mt-2 text-zinc-300">
+              Yes. You can adjust the booster to match your tone, from concise
+              to formal to casual, so responses sound like you.
             </p>
           </div>
         </div>
@@ -1028,7 +1112,7 @@
           onclick="document.querySelector('#waitlistForm input[type=email]').focus()"
           class="mt-4 px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400"
         >
-          Join the private alpha
+          Join the alpha
         </button>
       </section>
     </main>
@@ -1075,7 +1159,7 @@
           topic: "Strategy",
           text: "I think we should maybe try another approach. The current plan is risky and may cause scaling issues, so I'd propose we...",
           boosted:
-            "We may hit scaling issues with this plan — let's consider another approach.",
+            "We may hit scaling issues with this plan. Let's consider another approach.",
           notification: "Tone: Concise and actionable",
         },
         6: {
