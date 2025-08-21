@@ -1640,16 +1640,16 @@
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
-                // Demo booster is mostly in view
+              if (entry.isIntersecting && entry.intersectionRatio >= 1.0) {
+                // Demo booster is almost fully in view
                 isInView = true;
 
                 if (!entry.target.dataset.scenarioTriggered) {
-                  // First time in view - trigger scenario 1
+                  // First time in view - trigger scenario 1 with longer delay
                   entry.target.dataset.scenarioTriggered = "true";
                   setTimeout(() => {
                     runScenario(1);
-                  }, 500);
+                  }, 1500); // Increased delay to ensure user has time to see the section
                 } else {
                   // Already triggered, start auto-advance
                   runAuto();
@@ -1664,8 +1664,8 @@
             });
           },
           {
-            threshold: 0.8, // Trigger when 80% of the section is visible
-            rootMargin: "0px 0px -50px 0px", // Slight offset from bottom
+            threshold: 1.0, // Trigger when 100% of the section is visible
+            rootMargin: "0px 0px -100px 0px", // Larger offset from bottom to ensure better visibility
           }
         );
 
