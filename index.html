@@ -191,6 +191,11 @@
         pointer-events: none;
       }
 
+      /* White background variant for the alpha button */
+      .mgmt-boost-btn.white-bg::before {
+        background: white;
+      }
+
       .mgmt-boost-btn span {
         position: relative;
         z-index: 2;
@@ -613,10 +618,16 @@
       </section>
 
       <!-- Live UI mock: Mgmt Boost Panel -->
-      <section class="mt-10">
+      <section id="mgmtBoostPanelSection" class="mt-10">
         <div
           class="relative overflow-hidden bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 md:p-6"
         >
+          <!-- Easter Egg GIF -->
+          <div id="easterEggGif" class="absolute top-0 right-0 w-80 h-full transform translate-x-full transition-transform duration-700 ease-out z-50 pointer-events-none">
+            <img src="assets/20250820_1823_Glitched Sunset Serenity_remix_01k353jv93eent107axz6cp578.gif" 
+                 alt="Glitched Sunset Serenity" 
+                 class="w-full h-full object-cover rounded-lg shadow-2xl">
+          </div>
           <div class="flex items-center justify-between mb-6">
             <h3 class="font-semibold px-4 md:px-20"></h3>
             <button id="openPanelBtn" class="mgmt-boost-btn text-sm">
@@ -654,7 +665,7 @@
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button class="p-2 rounded hover:bg-zinc-700">⋯</button>
+                  <button id="easterEggButton" class="p-2 rounded hover:bg-zinc-700">⋯</button>
                 </div>
               </div>
 
@@ -1214,9 +1225,9 @@
         </p>
         <button
           onclick="document.querySelector('#waitlistForm input[type=email]').focus()"
-          class="mt-4 px-5 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400"
+          class="mgmt-boost-btn white-bg mt-4"
         >
-          Join the alpha
+          <span class="text-zinc-900 font-semibold">Join the alpha</span>
         </button>
       </section>
     </main>
@@ -2263,6 +2274,26 @@
           msg.textContent = "Network error. Please try again.";
           msg.className = "mt-3 text-sm text-rose-400";
         }
+      });
+    </script>
+
+
+
+    <!-- Easter Egg JavaScript -->
+    <script>
+      const easterEggButton = document.getElementById('easterEggButton');
+      const easterEggGif = document.getElementById('easterEggGif');
+      
+      easterEggButton.addEventListener('click', () => {
+        // Show the gif sliding in from the right
+        easterEggGif.classList.remove('translate-x-full');
+        easterEggGif.classList.add('translate-x-0');
+        
+        // Hide the gif after 3 seconds
+        setTimeout(() => {
+          easterEggGif.classList.remove('translate-x-0');
+          easterEggGif.classList.add('translate-x-full');
+        }, 15000);
       });
     </script>
   </body>
